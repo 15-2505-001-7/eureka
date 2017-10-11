@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-/*aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*/
-
 public class MainActivity extends AppCompatActivity {
     final static private String TAG = "screen2camera";
 
