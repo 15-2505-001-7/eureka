@@ -1,19 +1,12 @@
 package com.example.v001ff.footmark;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 
 
 /**
@@ -59,10 +52,11 @@ public class InputSpotFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        // setContentView(R.layout.activity_main);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -70,6 +64,7 @@ public class InputSpotFragment extends Fragment {
 
 
 
+        /*
         ((Button) findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 Intent intent = new Intent();
@@ -77,6 +72,7 @@ public class InputSpotFragment extends Fragment {
                 startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);
             }
         });
+        */
     }
 
     @Override
@@ -125,8 +121,9 @@ public class InputSpotFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    /*
     @Override
-    protected void onActivityResult(
+    protected void onActivityResult (
             int requestCode,
             int resultCode,
             Intent data) {
@@ -136,4 +133,5 @@ public class InputSpotFragment extends Fragment {
             ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
         }
     }
+    */
 }
