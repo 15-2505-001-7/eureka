@@ -1,6 +1,10 @@
 package com.example.v001ff.footmark;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -16,15 +20,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
 
-    @Override
+    private final int REQUEST_PERMISSION = 1000;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        if (Build.VERSION.SDK_INT >= 23)
+            checkPermission();
+        else
+            start();
+    }
+
+    public void start() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
+
+    //許可を求める
+    /*private void requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            ActivityCompat.requestPermissions(MainActivity.this, );
+        }
+    }*/
 
 
     /**
@@ -37,22 +55,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
+    //開いたときに実行される関数
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng yu = new LatLng(33.956416, 131.2725288);
+        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
-    }
-
-    /*  public void onMapReady(GoogleMap googleMap) {
-            mMap = googleMap;
-            LatLug yu = new LatLug(33.956416, 131.2725288);
-            mMap.addMaker(new MarkerOptions().position(yu).title("Marker in YU"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLug(yu));
-        }
-     */
-    /*private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -64,6 +73,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
-    }*/
+    }
 
+    public void checkPermission() {
+        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED)
+            start();
+        else
+            ActivityCompat.requestPermissions(this,new String[]
+                            {Manifest.permission.ACCESS_FINE_LOCATION,},
+                    REQUEST_PERMISSION);
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode,String[] permissions,
+                                           int[] grantResults) {
+        if((requestCode == REQUEST_PERMISSION)&&
+                (grantResults[0] == PackageManager.
+                        PERMISSION_GRANTED))
+            start();
+    }
 }
