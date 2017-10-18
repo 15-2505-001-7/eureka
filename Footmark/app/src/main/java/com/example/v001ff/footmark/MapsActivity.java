@@ -21,6 +21,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private final int REQUEST_PERMISSION = 1000;
 
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -103,3 +104,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 }
+
