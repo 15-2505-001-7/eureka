@@ -10,12 +10,17 @@ import android.view.View;
 import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
+    //final static private String TAG = "screen2camera";
+
     static final int REQUEST_CAPTURE_IMAGE = 100;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*if(savedInstanceState == null){
+           getSupportFragmentManager().beginTransaction().add(R.id.container, new CameraFragment()).commit();
+        }*/
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
                 Intent intent = new Intent();
@@ -31,6 +36,17 @@ public class MainActivity extends AppCompatActivity {
     }
     */
 
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.action_setting){
+            return true;
     @Override
     protected void onActivityResult(
             int requestCode,
@@ -41,5 +57,9 @@ public class MainActivity extends AppCompatActivity {
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
         }
+        return super.onOptionsItemSelected(item);
+    }*/
+
     }
 }
+
