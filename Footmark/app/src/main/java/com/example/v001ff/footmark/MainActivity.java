@@ -2,23 +2,21 @@ package com.example.v001ff.footmark;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
-    final static private String TAG = "screen2camera";
+    //final static private String TAG = "screen2camera";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().add(R.id.container, new CameraFragment()).commit();
-        }
+        /*if(savedInstanceState == null){
+           getSupportFragmentManager().beginTransaction().add(R.id.container, new CameraFragment()).commit();
+        }*/
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -31,8 +29,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
 }
-
 
