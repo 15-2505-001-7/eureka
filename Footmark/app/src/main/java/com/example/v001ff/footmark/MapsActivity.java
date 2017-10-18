@@ -18,7 +18,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    @Override
 
     private final int REQUEST_PERMISSION = 1000;
 
@@ -72,15 +71,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
-    }
-
-    /*  public void onMapReady(GoogleMap googleMap) {
-            mMap = googleMap;
-            LatLug yu = new LatLug(33.956416, 131.2725288);
-            mMap.addMaker(new MarkerOptions().position(yu).title("Marker in YU"));
-            mMap.moveCamera(CameraUpdateFactory.newLatLug(yu));
-        }
-     */
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
