@@ -1,37 +1,49 @@
 package com.example.v001ff.footmark;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 public class MainActivity extends AppCompatActivity {
+    //final static private String TAG = "screen2camera";
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ((Button) findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
+        /*if(savedInstanceState == null){
+           getSupportFragmentManager().beginTransaction().add(R.id.container, new CameraFragment()).commit();
+        }*/
+        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             public void onClick(View v){
-                //Intentオブジェクトの生成
                 Intent intent = new Intent();
-                //カメラアプリケーションの呼び出し
                 intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                //カメラアプリケーション用のアクティビティーを起動
                 startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);
             }
         });
     }
 
-    //新規のアクティビティーの終了時に呼ばれる
+    /*
+    public void onClickButton(View view){
+        FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.button);
+    }
+    */
+
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.action_setting){
+            return true;
     @Override
     protected void onActivityResult(
             int requestCode,
@@ -42,5 +54,7 @@ public class MainActivity extends AppCompatActivity {
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
         }
-    }
+        return super.onOptionsItemSelected(item);
+    }*/
 }
+
