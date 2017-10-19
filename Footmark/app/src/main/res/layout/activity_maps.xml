@@ -21,4 +21,11 @@
         android:textColor="#7d7d7e"
         android:textSize="50dp" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="109dp"
+        android:onClick="onButton2Tapped"
+        android:text="Button2" />
+
 </FrameLayout>
