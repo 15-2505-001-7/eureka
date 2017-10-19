@@ -82,4 +82,3 @@ public class InputSpotFragment extends Fragment {
     }
 
 }
-

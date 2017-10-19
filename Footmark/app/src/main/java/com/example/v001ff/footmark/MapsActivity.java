@@ -15,8 +15,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-
-
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -24,11 +22,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //対応検討中(も)
+        //InputSpotFragment fragment = new InputSpotFragment();
+        //getFragmentManager().beginTransaction().add
+        //        (android.R.id.content, fragment, "InputSpotFragment").commit();
+
         setContentView(R.layout.activity_maps);
         if (Build.VERSION.SDK_INT >= 23)
             checkPermission();
         else
             start();
+    }
+
+    public void onOkClicked() {
+
     }
 
     public void start() {
@@ -45,6 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
+
 
         /*//LocationManagerの取得
         LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
@@ -70,7 +79,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         */
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -84,41 +92,46 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(true);
     }
 
+    //位置情報許可の確認
     public void checkPermission() {
-        if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION)
+        //すでに許可していた場合
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED)
             start();
+            //拒否していた場合
         else
-            ActivityCompat.requestPermissions(this,new String[]
+            ActivityCompat.requestPermissions(this, new String[]
                             {Manifest.permission.ACCESS_FINE_LOCATION,},
                     REQUEST_PERMISSION);
 
     }
 
-    public void onRequestPermissionsResult(int requestCode,String[] permissions,
+    //結果の受け取り
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
-        if((requestCode == REQUEST_PERMISSION)&&
+        if ((requestCode == REQUEST_PERMISSION) &&
                 (grantResults[0] == PackageManager.
                         PERMISSION_GRANTED))
             start();
     }
 
+
 }
 
 
-/*
-  private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-        mMap.setMyLocationEnabled(true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-    }
- */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
