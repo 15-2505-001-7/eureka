@@ -21,6 +21,25 @@
         android:textColor="#7d7d7e"
         android:textSize="50dp" />
 
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        map:cameraZoom="17.0"
+        tools:context=".MapsActivity" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right|bottom"
+        android:clickable="true"
+        map:backgroundTint="@color/colorAccent"
+        map:fabSize="normal"
+        map:rippleColor="@android:color/holo_green_light"
+        map:srcCompat="@android:drawable/ic_input_add" />
+
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
