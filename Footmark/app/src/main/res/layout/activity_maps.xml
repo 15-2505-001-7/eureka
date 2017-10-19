@@ -32,4 +32,12 @@
         map:rippleColor="@android:color/holo_green_light"
         map:srcCompat="@android:drawable/ic_input_add" />
 
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="109dp"
+        android:onClick="onButton2Tapped"
+        android:text="Button2" />
+
 </FrameLayout>
