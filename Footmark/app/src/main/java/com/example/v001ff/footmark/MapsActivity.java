@@ -15,6 +15,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
+
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -35,18 +37,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-
     @Override
     //開いたときに実行される関数
     public void onMapReady(GoogleMap googleMap) {
@@ -55,6 +45,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
+
+        /*//LocationManagerの取得
+        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+        //GPSから現在地の情報を取得
+        Location myLocate = locationManager.getLastKnownLocation("gps");
+        //MapControllerの取得
+        MapController MapCtrl = mapView.getController();
+        if(myLocate != null){
+        //現在地情報取得成功
+        //緯度の取得
+        int latitude = (int) (myLocate.getLatitude() * 1e6);
+        //経度の取得
+        int longitude = (int) (myLocate.getLongitude() * 1e6);
+        //GeoPointに緯度・経度を指定
+        GeoPoint GP = new GeoPoint(latitude, longitude);
+        //現在地までアニメーションで移動
+        MapCtrl.animateTo(GP);
+        //現在地までパッと移動
+        MapCtrl.setCenter(GP);
+        }else{
+        //現在地情報取得失敗時の処理
+        Toast.makeText(this, "現在地取得できませーん！", Toast.LENGTH_SHORT).show();
+        }
+        */
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -87,7 +102,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         PERMISSION_GRANTED))
             start();
     }
+
 }
+
 
 /*
   private void setUpMap() {
