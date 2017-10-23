@@ -7,11 +7,14 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+
+import static android.R.attr.data;
 
 public class MainActivity extends AppCompatActivity {
     //final static private String TAG = "screen2camera";
@@ -30,15 +33,13 @@ public class MainActivity extends AppCompatActivity {
                 int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
 
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-/*ここはエラー吐かれるので後々修正予定。パーミッションの処理です。
                     // Android 6.0 のみ、カメラパーミッションが許可されていない場合
                     final int REQUEST_CODE = 1;
-                    ActivityCompat.requestPermissions((Activity) this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);            //修正予定ですごめんなさい
 
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {                //修正予定ですごめんなさい
                         // パーミッションが必要であることを明示するアプリケーション独自のUIを表示
                     }
-*/
                 } else {
                     // 許可済みの場合、もしくはAndroid 6.0以前
                     // パーミッションが必要な処理。以下でカメラ起動。
