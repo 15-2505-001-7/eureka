@@ -14,8 +14,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import static android.R.attr.data;
-
 public class MainActivity extends AppCompatActivity {
     //final static private String TAG = "screen2camera";
 
@@ -35,9 +33,9 @@ public class MainActivity extends AppCompatActivity {
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     // Android 6.0 のみ、カメラパーミッションが許可されていない場合
                     final int REQUEST_CODE = 1;
-                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);            //修正予定ですごめんなさい
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);            //修正予定ですごめんなさい
 
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {                //修正予定ですごめんなさい
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {                //修正予定ですごめんなさい
                         // パーミッションが必要であることを明示するアプリケーション独自のUIを表示
                     }
                 } else {
