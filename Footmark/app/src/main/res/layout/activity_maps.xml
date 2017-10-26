@@ -33,4 +33,11 @@
         map:srcCompat="@android:drawable/ic_input_add" />
 
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="109dp"
+        android:onClick="onButtonTapped2"
+        android:text="Button2" />
+
 </FrameLayout>
