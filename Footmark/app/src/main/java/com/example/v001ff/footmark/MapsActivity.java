@@ -1,7 +1,6 @@
 package com.example.v001ff.footmark;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
@@ -37,9 +36,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 
-    public void onOkClicked() {
-
-    }
 
     public void start() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -81,7 +77,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         */
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -118,26 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 
-    public void onButtonTapped2(View view){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+    @Override
+    public void onClick(View v) {
+        //Intent intent = new Intent(MapsActivity.this,InputSpotActivity);
+        //startActivity(intent);
     }
-
 }
-
-/*
-  private void setUpMap() {
-        mMap.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-        mMap.setMyLocationEnabled(true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-    }
- */
