@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,7 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
@@ -35,9 +36,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 
-    public void onOkClicked() {
-
-    }
 
     public void start() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -115,23 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 
-
+    @Override
+    public void onClick(View v) {
+        //Intent intent = new Intent(MapsActivity.this,InputSpotActivity);
+        //startActivity(intent);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
