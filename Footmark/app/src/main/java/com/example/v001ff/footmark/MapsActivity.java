@@ -119,4 +119,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = new Intent(getApplication(),InputSpotActivity.class);
         startActivity(intent);
     }
+
+    public void onButton2Tapped(View view){
+        Intent intent = new Intent(this,MainActivity.class);
+
+        startActivity(intent);
+    }
 }
