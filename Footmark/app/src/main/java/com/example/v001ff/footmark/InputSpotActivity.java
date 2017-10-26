@@ -1,7 +1,7 @@
 package com.example.v001ff.footmark;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class InputSpotActivity extends AppCompatActivity {
 
