@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
                     if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.CAMERA)) {                //修正予定ですごめんなさい
                         // パーミッションが必要であることを明示するアプリケーション独自のUIを表示
+                        Snackbar.make(view, R.string.rationale, Snackbar.LENGTH_LONG).show();
                     }
                 } else {
                     // 許可済みの場合、もしくはAndroid 6.0以前
