@@ -27,6 +27,7 @@
         android:layout_height="40dp"
         android:layout_gravity="right|bottom"
         android:clickable="true"
+        android:onClick="onClick"
         map:backgroundTint="@color/colorAccent"
         map:fabSize="normal"
         map:rippleColor="@android:color/holo_green_light"
