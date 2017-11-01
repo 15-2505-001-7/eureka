@@ -7,6 +7,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -117,6 +119,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getApplication(),InputSpotActivity.class);
+        startActivity(intent);
+    }
+
+    // メニュー作成
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_menu_drawer, menu);
+
+        return true;
+    }
+
+    // メニューアイテム選択イベント
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_camera:
+                // コードを追加
+                break;
+            case R.id.nav_gallery:
+                finish();
+                break;
+            case R.id.nav_slideshow:
+                finish();
+                break;
+            case R.id.nav_manage:
+                finish();
+                break;
+            case R.id.nav_share:
+                finish();
+                break;
+            case R.id.nav_send:
+                finish();
+                break;
+            case R.id.nav_view:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onButton2Tapped(View view){
+        Intent intent = new Intent(this,MainActivity.class);
+
         startActivity(intent);
     }
 }
