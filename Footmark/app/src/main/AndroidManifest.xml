@@ -40,6 +40,14 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBjXAibokNapqkt-XoMUfkNydgo0_hsXWc" />
+        /*
+        <meta-data
+            android:name="com.example.v001ff.footmark" android:value="InputSpotFragment"/>
+        <meta-data
+            android:name="AppCompatActivity" android:value="InputSpotFragment"/>
+        <meta-data
+            android:name="Fragment" android:value="InputSpotFragment"/>
+        */
 
         <activity
             android:name=".MapsActivity"
