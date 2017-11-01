@@ -27,6 +27,7 @@ public class FootmarkDataTable extends RealmObject {
     private long MyLatitude;                //ユーザー自身が投稿した場所の緯度
     private long MyLongitude;               //ユーザー自身が投稿した場所の経度
 
+
     public long getAccountId() {              //引数を受け取るゲッター
         return AccountId;
     }

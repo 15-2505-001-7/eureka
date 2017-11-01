@@ -7,6 +7,7 @@ import io.realm.RealmConfiguration;
 
 /**
  * Created by v071ff on 2017/10/11.
+ * アプリ起動時にアクティビティよりも先に呼び出されます
  */
 
 public class FootmarkApplication extends Application {

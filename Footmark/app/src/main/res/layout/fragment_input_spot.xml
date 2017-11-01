@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.v001ff.footmark.InputSpotFragment">
+    tools:context="com.example.v001ff.footmark.InputSpotActivity">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -21,7 +21,7 @@
         android:id="@+id/textInputLayout">
 
         <EditText
-            android:id="@+id/name"
+            android:id="@+id/addPlaceName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="場所の名前を入力"
@@ -55,7 +55,7 @@
         app:layout_constraintVertical_bias="0.503">
 
         <EditText
-            android:id="@+id/bodyEditText"
+            android:id="@+id/addReview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="本文" />
