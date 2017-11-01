@@ -8,6 +8,6 @@ public class InputSpotActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input_spot);
+        setContentView(R.layout.fragment_input_spot);
     }
 }

@@ -76,18 +76,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
-        if(id == R.id.action_setting){
+        if(id == R.id.action_setting) {
             return true;
-    @Override
-    protected void onActivityResult(
-            int requestCode,
-            int resultCode,
-            Intent data) {
-        if(REQUEST_CAPTURE_IMAGE == requestCode
-                && resultCode == Activity.RESULT_OK ){
-            Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
+            @Override
+            protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+                if (REQUEST_CAPTURE_IMAGE == requestCode
+                        && resultCode == Activity.RESULT_OK) {
+                    Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+                    ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
+                }
+                return super.onOptionsItemSelected(item);
+            }
+*/
 }
