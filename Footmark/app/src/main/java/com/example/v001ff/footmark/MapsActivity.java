@@ -118,7 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onClick(View v) {
-        Intent intent = new Intent(getApplication(),InputSpotActivity.class);
+        Intent intent = new Intent(getApplication(), InputSpotActivity.class);
         startActivity(intent);
     }
 
@@ -126,7 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_menu_drawer, menu);
-
         return true;
     }
 
