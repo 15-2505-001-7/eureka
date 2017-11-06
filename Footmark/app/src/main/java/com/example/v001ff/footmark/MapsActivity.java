@@ -54,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng yu = new LatLng(33.956416, 131.2725288);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.googleg_disabled_color_18)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree2)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
 
 
@@ -79,8 +79,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
         //現在地情報取得失敗時の処理
         Toast.makeText(this, "現在地取得できませーん！", Toast.LENGTH_SHORT).show();
-        }
-        */
+        }*/
+
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
