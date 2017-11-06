@@ -42,13 +42,15 @@
             android:value="AIzaSyBjXAibokNapqkt-XoMUfkNydgo0_hsXWc" />
         /*
         <meta-data
-            android:name="com.example.v001ff.footmark" android:value="InputSpotFragment"/>
+            android:name="com.example.v001ff.footmark"
+            android:value="InputSpotFragment" />
         <meta-data
-            android:name="AppCompatActivity" android:value="InputSpotFragment"/>
+            android:name="AppCompatActivity"
+            android:value="InputSpotFragment" />
         <meta-data
-            android:name="Fragment" android:value="InputSpotFragment"/>
+            android:name="Fragment"
+            android:value="InputSpotFragment" />
         */
-
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps">
@@ -70,6 +72,7 @@
             android:name=".InputSpotActivity"
             android:label="InputSpotActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ShowSpotActivity"></activity>
     </application>
 
 </manifest>
