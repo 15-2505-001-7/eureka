@@ -13,11 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import io.realm.Realm;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
@@ -76,11 +74,13 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
         }
     }
+
 }
