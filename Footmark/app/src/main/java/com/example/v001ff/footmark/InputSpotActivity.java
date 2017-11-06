@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import io.realm.Realm;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -112,11 +114,13 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
         }
     }
+
 }
