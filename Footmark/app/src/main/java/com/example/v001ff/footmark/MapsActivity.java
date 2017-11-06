@@ -47,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
     }
 
+
     @Override
     //開いたときに実行される関数
     public void onMapReady(GoogleMap googleMap) {
