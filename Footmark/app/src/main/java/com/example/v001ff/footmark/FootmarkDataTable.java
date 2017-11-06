@@ -15,6 +15,7 @@ public class FootmarkDataTable extends RealmObject {
     private byte[] AccountImage;            //アカウント画像
     private String AccountName;              //アカウント名
     private int PlaceId;                     //投稿された場所を管理するためのID
+    private int AccountPlaceSynthId;       //アカウントと投稿された場所の数を足したものを格納。自分が投稿した場所の検索に使う
     private String PlaceName;                //投稿された場所の名前
     private long Latitude;                  //投稿された場所の緯度
     private long Longitude;                 //投稿された場所の経度
