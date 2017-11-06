@@ -16,15 +16,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import io.realm.Realm;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
 
-import static android.R.attr.id;
-import static com.example.v001ff.footmark.R.id.spot_photo;
+import static android.R.attr.data;
 
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
@@ -36,6 +33,7 @@ public class InputSpotActivity extends AppCompatActivity {
     String latitude;
     String longitudeRef;                                         //画像から取得する経度
     String longitude;
+    Bitmap capturedImage;
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
@@ -80,12 +78,20 @@ public class InputSpotActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
+            capturedImage = (Bitmap) data.getExtras().get("data");
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+        }
+    }
+
     public void onPostingButtonPTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
         try {
             dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface(/*ここに画像のリソース名*/);
+            ExifInterface exifInterface = new ExifInterface();              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -104,7 +110,6 @@ public class InputSpotActivity extends AppCompatActivity {
         });
 
         //ここにRealmにデータ追加する文を書く
-        //あとボタンの名前をinputから変えたほうがいい
 
     }
 
@@ -112,15 +117,6 @@ public class InputSpotActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
-            Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-        }
     }
 
 }
