@@ -54,7 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng yu = new LatLng(33.956416, 131.2725288);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.tree2)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
 
 
