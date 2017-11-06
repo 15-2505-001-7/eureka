@@ -116,6 +116,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 
+    //InputSpotActivityに遷移
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getApplication(), InputSpotActivity.class);
