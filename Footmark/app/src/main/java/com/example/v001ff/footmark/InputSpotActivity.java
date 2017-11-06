@@ -27,6 +27,7 @@ public class InputSpotActivity extends AppCompatActivity {
 
         //ここにRealmにデータ追加する文を書く
         //あとボタンの名前をinputから変えたほうがいい
+
     }
 
     @Override
