@@ -21,8 +21,6 @@ import java.util.Date;
 
 import io.realm.Realm;
 
-import static android.R.attr.data;
-
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
@@ -45,10 +43,6 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
         mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
         mAddReview = (EditText) findViewById(R.id.addReview);
-
-
-
-
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
         spot_photo.setOnClickListener(new View.OnClickListener(){
@@ -81,7 +75,10 @@ public class InputSpotActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             capturedImage = (Bitmap) data.getExtras().get("data");
+            //Bitmap capturedImage = new Bitmap(data.getExtras().get("data"));
+            //capturedImage.Save("data.jpeg");
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+
         }
     }
 
@@ -90,7 +87,7 @@ public class InputSpotActivity extends AppCompatActivity {
         Date dateParse = new Date();
         try {
             dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface();              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -104,6 +101,7 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
+                @Override
 
             }
         });

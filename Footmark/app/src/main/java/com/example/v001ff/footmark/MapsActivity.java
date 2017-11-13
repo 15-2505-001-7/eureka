@@ -15,9 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener {
@@ -54,8 +52,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng yu = new LatLng(33.956416, 131.2725288);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));
+        /*mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
 
 
@@ -122,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //InputSpotActivityに遷移
     @Override
     public void onClick(View v) {
+        //ここで位置情報取得
         Intent intent = new Intent(getApplication(), InputSpotActivity.class);
         startActivity(intent);
     }
