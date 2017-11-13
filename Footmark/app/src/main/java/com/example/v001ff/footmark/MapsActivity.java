@@ -52,8 +52,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng yu = new LatLng(33.956416, 131.2725288);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        /*mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));*/
+        //mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU").icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
 
 
@@ -120,7 +119,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //InputSpotActivityに遷移
     @Override
     public void onClick(View v) {
-        //ここで位置情報取得
         Intent intent = new Intent(getApplication(), InputSpotActivity.class);
         startActivity(intent);
     }
