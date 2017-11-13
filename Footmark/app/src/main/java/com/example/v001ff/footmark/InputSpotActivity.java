@@ -21,8 +21,6 @@ import java.util.Date;
 
 import io.realm.Realm;
 
-import static android.R.attr.data;
-
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
@@ -34,6 +32,7 @@ public class InputSpotActivity extends AppCompatActivity {
     String longitudeRef;                                         //画像から取得する経度
     String longitude;
     Bitmap capturedImage;
+    //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
@@ -89,9 +88,10 @@ public class InputSpotActivity extends AppCompatActivity {
     public void onPostingButtonPTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
+        byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         try {
             dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface();              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -105,7 +105,13 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-
+                realm.beginTransaction();
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class);
+                footmarkDataTable.setPlaceName(mAddPlaceName.toString());
+                footmarkDataTable.setReviewBody(mAddReview.toString());
+                footmarkDataTable.setPlaceDate(date);
+                footmarkDataTable.setLatitude(latitude);
+                footmarkDataTable.setLongitude(longitude);
             }
         });
 
