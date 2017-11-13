@@ -15,18 +15,17 @@ public class FootmarkDataTable extends RealmObject {
     private byte[] AccountImage;            //アカウント画像
     private String AccountName;              //アカウント名
     private int PlaceId;                     //投稿された場所を管理するためのID
-    private int AccountPlaceSynthId;       //アカウントと投稿された場所の数を足したものを格納。自分が投稿した場所の検索に使う
     private String PlaceName;                //投稿された場所の名前
-    private long Latitude;                  //投稿された場所の緯度
-    private long Longitude;                 //投稿された場所の経度
+    private String Latitude;                  //投稿された場所の緯度
+    private String Longitude;                 //投稿された場所の経度
     private byte[] PlaceImage;              //投稿された場所のイメージ画像
     private Date PlaceDate;                  //投稿された場所の追加された時の日付
     private String Title;                     //レビュータイトル
-    private String Text;                      //レビュー本文
+    private String ReviewBody;                      //レビュー本文
     private Date ReviewDate;                 //レビューが投稿された日付
     private long MyPlaceName;               //ユーザー自身が投稿した場所の名前
-    private long MyLatitude;                //ユーザー自身が投稿した場所の緯度
-    private long MyLongitude;               //ユーザー自身が投稿した場所の経度
+    private String MyLatitude;                //ユーザー自身が投稿した場所の緯度
+    private String MyLongitude;               //ユーザー自身が投稿した場所の経度
 
 
     public long getAccountId() {              //引数を受け取るゲッター
@@ -49,11 +48,11 @@ public class FootmarkDataTable extends RealmObject {
         return PlaceName;
     }
 
-    public long getLatitude() {
+    public String getLatitude() {
         return Latitude;
     }
 
-    public long getLongitude() {
+    public String getLongitude() {
         return Longitude;
     }
 
@@ -69,8 +68,8 @@ public class FootmarkDataTable extends RealmObject {
         return Title;
     }
 
-    public String getText() {
-        return Text;
+    public String getReviewBody() {
+        return ReviewBody;
     }
 
     public Date getReviewDate() {               //引数を変更するためのセッター
@@ -81,11 +80,11 @@ public class FootmarkDataTable extends RealmObject {
         return MyPlaceName;
     }
 
-    public long getMyLatitude() {
+    public String getMyLatitude() {
         return MyLatitude;
     }
 
-    public long getMyLongitude() {
+    public String getMyLongitude() {
         return MyLongitude;
     }
 
@@ -110,11 +109,11 @@ public class FootmarkDataTable extends RealmObject {
         PlaceName = placeName;
     }
 
-    public void setLatitude(long latitude) {
+    public void setLatitude(String latitude) {
         Latitude = latitude;
     }
 
-    public void setLongitude(long longitude) {
+    public void setLongitude(String longitude) {
         Longitude = longitude;
     }
 
@@ -130,9 +129,7 @@ public class FootmarkDataTable extends RealmObject {
         Title = title;
     }
 
-    public void setText(String text) {
-        Text = text;
-    }
+    public void setReviewBody(String reviewBody)  { ReviewBody = reviewBody;}
 
     public void setReviewDate(Date reviewDate) {
         ReviewDate = reviewDate;
@@ -142,11 +139,11 @@ public class FootmarkDataTable extends RealmObject {
         MyPlaceName = myPlaceName;
     }
 
-    public void setMyLatitude(long myLatitude) {
+    public void setMyLatitude(String myLatitude) {
         MyLatitude = myLatitude;
     }
 
-    public void setMyLongitude(long myLongitude) {
+    public void setMyLongitude(String myLongitude) {
         MyLongitude = myLongitude;
     }
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,7 @@ public class InputSpotActivity extends AppCompatActivity {
     String longitudeRef;                                         //画像から取得する経度
     String longitude;
     Bitmap capturedImage;
+    //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
@@ -83,12 +85,13 @@ public class InputSpotActivity extends AppCompatActivity {
         }
     }
 
-    public void onPostingButtonPTapped(View view) {
+    public void onPostingButtonTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
-        /*try {
+        byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        try {
             dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface();              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -96,13 +99,19 @@ public class InputSpotActivity extends AppCompatActivity {
         }
         catch (Exception ex) {
             ex.printStackTrace();
-        }*/
+        }
         final Date date = dateParse;
 
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-
+                realm.beginTransaction();
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class);
+                footmarkDataTable.setPlaceName(mAddPlaceName.toString());
+                footmarkDataTable.setReviewBody(mAddReview.toString());
+                footmarkDataTable.setPlaceDate(date);
+                footmarkDataTable.setLatitude(latitude);
+                footmarkDataTable.setLongitude(longitude);
             }
         });
 
