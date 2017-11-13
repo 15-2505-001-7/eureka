@@ -80,7 +80,7 @@ public class InputSpotActivity extends AppCompatActivity {
         }
     }
 
-    public void onPostingButtonPTapped(View view) {
+    public void onPostingButtonTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
         byte[] bytes = MyUtils.getByteFromImage(capturedImage);
