@@ -45,11 +45,6 @@ public class InputSpotActivity extends AppCompatActivity {
         mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
         mAddReview = (EditText) findViewById(R.id.addReview);
 
-
-
-
-
-
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
         spot_photo.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {                        //カメラ起動するための処理。試作。
