@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -20,8 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
-
-import static android.R.attr.data;
 
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
@@ -89,7 +86,7 @@ public class InputSpotActivity extends AppCompatActivity {
     public void onPostingButtonPTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
-        try {
+        /*try {
             dateParse = sdf.parse(mDate.getText().toString());
             ExifInterface exifInterface = new ExifInterface();              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
@@ -99,7 +96,7 @@ public class InputSpotActivity extends AppCompatActivity {
         }
         catch (Exception ex) {
             ex.printStackTrace();
-        }
+        }*/
         final Date date = dateParse;
 
         mRealm.executeTransaction(new Realm.Transaction(){

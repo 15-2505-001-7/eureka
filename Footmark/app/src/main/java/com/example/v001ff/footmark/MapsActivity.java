@@ -17,10 +17,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
@@ -57,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
+        mMap.setOnInfoWindowClickListener(this);
 
 
         /*//LocationManagerの取得
@@ -165,6 +167,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onButton2Tapped(View view){
         Intent intent = new Intent(this,MainActivity.class);
 
+        startActivity(intent);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         startActivity(intent);
     }
 }

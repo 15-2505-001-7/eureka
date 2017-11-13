@@ -1,13 +1,17 @@
 package com.example.v001ff.footmark;
 
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-public class ShowSpotActivity extends AppCompatActivity {
+public class ShowSpotActivity extends AppCompatActivity{
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    private final int BTN_START = 0;
+    private final int BTN_PREV = 1;
+    private final int BTN_NEXT = 2;
+    private final int BTN_END = 3;
+
+    //保留
+    /*protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_spot);
-    }
+    }*/
 }
