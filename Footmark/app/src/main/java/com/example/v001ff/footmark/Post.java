@@ -11,7 +11,7 @@ public class Post extends RealmObject {
        @PrimaryKey
         public long id;
         public String userName;
-        public String spoyInfo;
+        public String spotInfo;
         public String date;
         public byte[] userPhoto;
 }

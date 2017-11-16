@@ -18,16 +18,16 @@ import io.realm.RealmRecyclerViewAdapter;
  * Created by enPiT-P7 on 2017/11/16.
  */
 
-public class PostRealmAdapter  extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder> {
+public class PostRealmAdapter extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder> {
     Context context;
 
-    public static class PostViewHolder extends RecyclerView.ViewHolder {
+    public static class PostViewHolder extends RecyclerView.ViewHolder{
         protected TextView userName;
         protected TextView spoyInfo;
         protected TextView date;
         protected ImageView userPhoto;
 
-        public PostViewHolder(View itemView) {
+        public PostViewHolder(View itemView){
             super(itemView);
             userName = (TextView) itemView.findViewById(R.id.username);
             spoyInfo = (TextView) itemView.findViewById(R.id.spotinfo);
@@ -43,7 +43,7 @@ public class PostRealmAdapter  extends RealmRecyclerViewAdapter<Post, PostRealmA
     }
 
     @Override
-    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
         final PostViewHolder holder = new PostViewHolder(itemView);
 
@@ -63,15 +63,14 @@ public class PostRealmAdapter  extends RealmRecyclerViewAdapter<Post, PostRealmA
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
+    public void onBindViewHolder(PostViewHolder holder, int position){
         Post post = getData().get(position);
         holder.userName.setText(post.userName);
-        holder.spoyInfo.setText(post.spoyInfo);
+        holder.spoyInfo.setText(post.spotInfo);
         holder.date.setText(post.date);
-        if (post.userPhoto != null && post.userPhoto.length != 0) {
+        if(post.userPhoto != null && post.userPhoto.length != 0){
             Bitmap bmp = MyUtils.getImageFromByte(post.userPhoto);
             holder.userPhoto.setImageBitmap(bmp);
-
         }
     }
 }
