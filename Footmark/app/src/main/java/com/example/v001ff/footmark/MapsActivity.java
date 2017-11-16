@@ -63,28 +63,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(this);
 
 
-        /*//LocationManagerの取得
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        //GPSから現在地の情報を取得
-        Location myLocate = locationManager.getLastKnownLocation("gps");
-        //MapControllerの取得
-        MapController MapCtrl = mapView.getController();
-        if(myLocate != null){
-        //現在地情報取得成功
-        //緯度の取得
-        int latitude = (int) (myLocate.getLatitude() * 1e6);
-        //経度の取得
-        int longitude = (int) (myLocate.getLongitude() * 1e6);
-        //GeoPointに緯度・経度を指定
-        GeoPoint GP = new GeoPoint(latitude, longitude);
-        //現在地までアニメーションで移動
-        MapCtrl.animateTo(GP);
-        //現在地までパッと移動
-        MapCtrl.setCenter(GP);
-        }else{
-        //現在地情報取得失敗時の処理
-        Toast.makeText(this, "現在地取得できませーん！", Toast.LENGTH_SHORT).show();
-        }*/
+
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

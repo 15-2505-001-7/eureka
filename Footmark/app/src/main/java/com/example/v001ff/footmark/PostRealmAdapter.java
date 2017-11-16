@@ -4,8 +4,8 @@ package com.example.v001ff.footmark;
  * Created by enPiT-P7 on 2017/11/16.
  */
 
-/*public class PostRealmAdapter  extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder> {
-    Context context;
+public class PostRealmAdapter  /*extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder>*/ {
+   /* Context context;
 
     public static class PostViewHolder extends RecyclerView.ViewHolder{
         protected TextView userName;
@@ -23,7 +23,7 @@ package com.example.v001ff.footmark;
     }
 
     public PostRealmAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Post> data,
-                             boolean autoUpdate) {
+                            boolean autoUpdate) {
         super(data, autoUpdate);
         this.context = context;
     }
@@ -45,7 +45,12 @@ package com.example.v001ff.footmark;
                 context.startActivity(intent);
             }
         });*/
-/*        return holder;
+       /* return holder;
+    }
+
+    @Override
+    public void onBindViewHolder(PostViewHolder holder, int position) {
+
     }
 
     @Override
@@ -58,5 +63,5 @@ package com.example.v001ff.footmark;
             Bitmap bmp = MyUtils.getImageFromByte(spot.image);
             holder.spot.setImageBitmap(bmp);
         }
-    }
-}*/
+    }*/
+}
