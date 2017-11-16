@@ -54,7 +54,7 @@ public class ShowSpotActivity extends AppCompatActivity
         if(fragment == null) {
             fragment = new PostListFragment();
             FragmentTransaction transaction = manager.beginTransaction();
-            //transaction.add(R.id.content, fragment, "PostListFragment");
+            transaction.add(R.id.content, fragment, "PostListFragment");
             transaction.commit();
         }
     }
