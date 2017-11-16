@@ -15,10 +15,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import static com.example.v001ff.footmark.R.mipmap.kusa;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
@@ -52,8 +57,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng yu = new LatLng(33.956416, 131.2725288);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        //mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU").icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));
+        mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
+                .icon(BitmapDescriptorFactory.fromResource(kusa)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
+        mMap.setOnInfoWindowClickListener(this);
 
 
         /*//LocationManagerの取得
@@ -162,6 +169,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onButton2Tapped(View view){
         Intent intent = new Intent(this,MainActivity.class);
 
+        startActivity(intent);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         startActivity(intent);
     }
 }
