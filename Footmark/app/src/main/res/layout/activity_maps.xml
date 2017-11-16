@@ -13,14 +13,6 @@
         map:cameraZoom="17.0"
         tools:context=".MapsActivity" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="+"
-        android:textColor="#7d7d7e"
-        android:textSize="50dp" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="40dp"
@@ -40,5 +32,14 @@
         android:layout_height="109dp"
         android:onClick="onButton2Tapped"
         android:text="Button2" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="#7d7d7e"
+        android:textSize="50dp" />
 
 </FrameLayout>
