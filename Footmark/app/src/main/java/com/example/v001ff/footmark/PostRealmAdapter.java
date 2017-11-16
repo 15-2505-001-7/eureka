@@ -1,11 +1,25 @@
 package com.example.v001ff.footmark;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import io.realm.OrderedRealmCollection;
+import io.realm.RealmRecyclerViewAdapter;
+
 /**
  * Created by enPiT-P7 on 2017/11/16.
  */
 
-public class PostRealmAdapter  /*extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder>*/ {
-   /* Context context;
+public class PostRealmAdapter extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder> {
+    Context context;
 
     public static class PostViewHolder extends RecyclerView.ViewHolder{
         protected TextView userName;
@@ -29,9 +43,9 @@ public class PostRealmAdapter  /*extends RealmRecyclerViewAdapter<Post, PostReal
     }
 
     @Override
-    public SpotViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public PostViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_layout, parent, false);
-        final SpotViewHolder holder = new SpotViewHolder(itemView);
+        final PostViewHolder holder = new PostViewHolder(itemView);
 
         /*holder.itemView.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -45,23 +59,18 @@ public class PostRealmAdapter  /*extends RealmRecyclerViewAdapter<Post, PostReal
                 context.startActivity(intent);
             }
         });*/
-       /* return holder;
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(PostViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public void onBindViewHolder(SpotViewHolder holder, int position){
-        Spot spot = getData().get(position);
-        holder.userName.setText(spot.username);
-        holder.spoyInfo.setText(spot.spotinfo);
-        holder.date.setText(spot.date);
-        if(spot.image != null && spot.image.length != 0){
-            Bitmap bmp = MyUtils.getImageFromByte(spot.image);
-            holder.spot.setImageBitmap(bmp);
+    public void onBindViewHolder(PostViewHolder holder, int position){
+        Post post = getData().get(position);
+        holder.userName.setText(post.userName);
+        holder.spoyInfo.setText(post.spotInfo);
+        holder.date.setText(post.date);
+        if(post.userPhoto != null && post.userPhoto.length != 0){
+            Bitmap bmp = MyUtils.getImageFromByte(post.userPhoto);
+            holder.userPhoto.setImageBitmap(bmp);
         }
-    }*/
+    }
 }
