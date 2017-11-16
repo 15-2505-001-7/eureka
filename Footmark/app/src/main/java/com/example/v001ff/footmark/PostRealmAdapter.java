@@ -23,14 +23,14 @@ public class PostRealmAdapter extends RealmRecyclerViewAdapter<Post, PostRealmAd
 
     public static class PostViewHolder extends RecyclerView.ViewHolder{
         protected TextView userName;
-        protected TextView spoyInfo;
+        protected TextView spotInfo;
         protected TextView date;
         protected ImageView userPhoto;
 
         public PostViewHolder(View itemView){
             super(itemView);
             userName = (TextView) itemView.findViewById(R.id.username);
-            spoyInfo = (TextView) itemView.findViewById(R.id.spotinfo);
+            spotInfo = (TextView) itemView.findViewById(R.id.spotinfo);
             date = (TextView) itemView.findViewById(R.id.date);
             userPhoto = (ImageView) itemView.findViewById(R.id.userphoto);
         }
@@ -66,7 +66,7 @@ public class PostRealmAdapter extends RealmRecyclerViewAdapter<Post, PostRealmAd
     public void onBindViewHolder(PostViewHolder holder, int position){
         Post post = getData().get(position);
         holder.userName.setText(post.userName);
-        holder.spoyInfo.setText(post.spotInfo);
+        holder.spotInfo.setText(post.spotInfo);
         holder.date.setText(post.date);
         if(post.userPhoto != null && post.userPhoto.length != 0){
             Bitmap bmp = MyUtils.getImageFromByte(post.userPhoto);
