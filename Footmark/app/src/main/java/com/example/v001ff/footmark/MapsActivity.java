@@ -20,6 +20,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static com.example.v001ff.footmark.R.mipmap.kusa;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
 
@@ -56,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng yu = new LatLng(33.956416, 131.2725288);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.kusa)));
+                .icon(BitmapDescriptorFactory.fromResource(kusa)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
         mMap.setOnInfoWindowClickListener(this);
 
@@ -172,7 +174,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //Toast.makeText(this, "Info window clicked", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         startActivity(intent);
     }
