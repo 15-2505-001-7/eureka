@@ -1,13 +1,16 @@
 package com.example.v001ff.footmark;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import io.realm.Realm;
 
 public class ShowSpotActivity extends AppCompatActivity
-        /*implements PostListFragment.OnFragmentInteractionListener*/{
+        implements PostListFragment.OnFragmentInteractionListener {
 
     private Realm mRealm;
 
@@ -21,7 +24,7 @@ public class ShowSpotActivity extends AppCompatActivity
         mRealm = Realm.getDefaultInstance();
 
         createTestData();
-        //showSpotList();
+        showSpotList();
     }
 
     @Override
@@ -45,13 +48,13 @@ public class ShowSpotActivity extends AppCompatActivity
         });
     }
 
-    /*private void showSpotList() {
+    private void showSpotList() {
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag("PostListFragment");
         if(fragment == null) {
             fragment = new PostListFragment();
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.add(R.id.content, fragment, "PostListFragment");
+            //transaction.add(R.id.content, fragment, "PostListFragment");
             transaction.commit();
         }
     }
@@ -59,5 +62,5 @@ public class ShowSpotActivity extends AppCompatActivity
     @Override
     public void onAddDiarySelected(){
 
-    }*/
+    }
 }
