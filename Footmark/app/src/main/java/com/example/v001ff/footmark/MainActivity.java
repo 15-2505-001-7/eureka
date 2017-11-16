@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {                        //カメラ起動するための処理。試作。
@@ -52,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
@@ -62,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //データベースの中身表示
 
     /*
     public void onClickButton(View view){

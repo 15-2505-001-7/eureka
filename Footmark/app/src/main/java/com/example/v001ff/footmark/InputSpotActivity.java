@@ -109,7 +109,6 @@ public class InputSpotActivity extends AppCompatActivity {
                 footmarkDataTable.setLongitude(longitude);
             }
         });
-
         //ここにRealmにデータ追加する文を書く
 
     }
