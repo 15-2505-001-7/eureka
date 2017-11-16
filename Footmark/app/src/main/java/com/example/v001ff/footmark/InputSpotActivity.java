@@ -125,4 +125,5 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
     }
 
+
 }
