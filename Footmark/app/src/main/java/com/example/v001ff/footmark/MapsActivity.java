@@ -20,7 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static com.example.v001ff.footmark.R.mipmap.kusa;
+import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
@@ -55,36 +55,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     //開いたときに実行される関数
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng yu = new LatLng(33.956416, 131.2725288);
+        LatLng yu = new LatLng(33.9567058, 131.2727738);
+        LatLng zu = new LatLng(33.9304745,  131.2556893);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.addMarker(new MarkerOptions().position(yu).title("Marker in YU")
-                .icon(BitmapDescriptorFactory.fromResource(kusa)));
+        mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
+                .icon(BitmapDescriptorFactory.fromResource(sample)));
+        mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
+                .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
         mMap.setOnInfoWindowClickListener(this);
 
 
-        /*//LocationManagerの取得
-        LocationManager locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        //GPSから現在地の情報を取得
-        Location myLocate = locationManager.getLastKnownLocation("gps");
-        //MapControllerの取得
-        MapController MapCtrl = mapView.getController();
-        if(myLocate != null){
-        //現在地情報取得成功
-        //緯度の取得
-        int latitude = (int) (myLocate.getLatitude() * 1e6);
-        //経度の取得
-        int longitude = (int) (myLocate.getLongitude() * 1e6);
-        //GeoPointに緯度・経度を指定
-        GeoPoint GP = new GeoPoint(latitude, longitude);
-        //現在地までアニメーションで移動
-        MapCtrl.animateTo(GP);
-        //現在地までパッと移動
-        MapCtrl.setCenter(GP);
-        }else{
-        //現在地情報取得失敗時の処理
-        Toast.makeText(this, "現在地取得できませーん！", Toast.LENGTH_SHORT).show();
-        }*/
+
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
