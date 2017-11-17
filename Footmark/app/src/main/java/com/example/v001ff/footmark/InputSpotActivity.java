@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,8 +25,8 @@ import io.realm.Realm;
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
-    private EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
-    private EditText mAddReview;                                //投稿画面のレビュー部分に対応
+    EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
+    EditText mAddReview;                                //投稿画面のレビュー部分に対応
     private EditText mDate;                                      //投稿された日時
     String latitudeRef;                                          //画像から取得する緯度
     String latitude;
@@ -100,17 +101,20 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
+                Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
+                long nextId = 0;
+                if(maxId != null) nextId = maxId.longValue() + 1;
                 realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class);
-                footmarkDataTable.setPlaceName(mAddPlaceName.toString());
-                footmarkDataTable.setReviewBody(mAddReview.toString());
+                footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
+                footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setPlaceDate(date);
                 footmarkDataTable.setLatitude(latitude);
                 footmarkDataTable.setLongitude(longitude);
             }
         });
         //ここにRealmにデータ追加する文を書く
-
+        Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -118,6 +122,5 @@ public class InputSpotActivity extends AppCompatActivity {
         super.onDestroy();
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
     }
-
 
 }

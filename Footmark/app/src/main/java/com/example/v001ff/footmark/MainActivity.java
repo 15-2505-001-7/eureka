@@ -14,8 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+    private Realm mRealm;
+    private ListView mListView;
     //final static private String TAG = "screen2camera";
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
@@ -49,6 +55,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //リストビューにアダプターを設定
+        mRealm = Realm.getDefaultInstance();
+
+        mListView = (ListView) findViewById(R.id.listView);
+        RealmResults<FootmarkDataTable> footmarkDataTables
+                = mRealm.where(FootmarkDataTable.class).findAll();
+        PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
+        mListView.setAdapter(adapter);
+
+
     }
 
     @Override
