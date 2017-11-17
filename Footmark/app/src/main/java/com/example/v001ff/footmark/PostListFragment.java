@@ -51,7 +51,7 @@ public class PostListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_post_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recycler);
+        RecyclerView recyclerView = /*(RecyclerView)*/ v.findViewById(R.id.recycler);
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
