@@ -102,7 +102,7 @@ public class InputSpotActivity extends AppCompatActivity {
         }
         final Date date = dateParse;
 
-        mRealm.executeTransaction(new Realm.Transaction(){
+    /*    mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
                 realm.beginTransaction();
@@ -114,7 +114,7 @@ public class InputSpotActivity extends AppCompatActivity {
                 footmarkDataTable.setLongitude(longitude);
             }
         });
-
+*/
         //ここにRealmにデータ追加する文を書く
 
     }

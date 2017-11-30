@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +22,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import static com.example.v001ff.footmark.R.mipmap.kusa;
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
@@ -30,17 +33,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //対応検討中(も)
-        //InputSpotFragment fragment = new InputSpotFragment();
-        //getFragmentManager().beginTransaction().add
-        //        (android.R.id.content, fragment, "InputSpotFragment").commit();
-
         setContentView(R.layout.activity_maps);
+
         if (Build.VERSION.SDK_INT >= 23)
             checkPermission();
         else
             start();
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View view = getLayoutInflater().inflate(R.layout.info_window, null);
+                TextView title = view.findViewById(R.id.info_title);
+                title.setText(marker.getTitle());
+                ImageView img = view.findViewById(R.id.info_image);
+                img.setImageResource(kusa);
+                return view;
+            }
+        });
     }
 
 
@@ -57,11 +71,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         LatLng yu = new LatLng(33.9567058, 131.2727738);
         LatLng zu = new LatLng(33.9304745,  131.2556893);
+        MarkerOptions options = new MarkerOptions();
+        options.position(yu);
+        options.title("山口大学工学部");
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
+        Marker marker = mMap.addMarker(options
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
-        mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
+        options.position(zu);
+        options.title("フジグラン宇部");
+        Marker marker1 = mMap.addMarker(options
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
+        marker.showInfoWindow();
+        marker1.showInfoWindow();
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
         mMap.setOnInfoWindowClickListener(this);
 
@@ -146,12 +167,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public void onButton2Tapped(View view){
-        Intent intent = new Intent(this,MainActivity.class);
-
-        startActivity(intent);
     }
 
     @Override
