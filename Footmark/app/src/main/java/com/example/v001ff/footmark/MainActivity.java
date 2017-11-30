@@ -14,8 +14,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+
+import java.io.ByteArrayOutputStream;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
+    private Realm mRealm;
+    private ListView mListView;
     //final static private String TAG = "screen2camera";
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
@@ -23,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
@@ -50,18 +57,35 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //リストビューにアダプターを設定
+        mRealm = Realm.getDefaultInstance();
+
+        mListView = (ListView) findViewById(R.id.listView);
+        RealmResults<FootmarkDataTable> footmarkDataTables
+                = mRealm.where(FootmarkDataTable.class).findAll();
+        PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
+        mListView.setAdapter(adapter);
+
+
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
         }
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mRealm.close();
+    }
+    //データベースの中身表示
 
     /*
     public void onClickButton(View view){

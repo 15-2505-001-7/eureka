@@ -8,4 +8,13 @@
     tools:context="com.example.v001ff.footmark.MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="288dp"
+        android:layout_height="195dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 </android.support.constraint.ConstraintLayout>

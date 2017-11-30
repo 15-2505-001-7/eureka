@@ -48,9 +48,7 @@ public class FootmarkDataTable extends RealmObject {
         return PlaceName;
     }
 
-    public String getLatitude() {
-        return Latitude;
-    }
+    public String getLatitude() {return Latitude;}
 
     public String getLongitude() {
         return Longitude;
