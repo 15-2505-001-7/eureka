@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -17,6 +16,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -76,7 +76,11 @@ public class InputSpotActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
-            capturedImage = (Bitmap) data.getExtras().get("data");
+            //capturedImage = (Bitmap) data.getExtras().get("data");
+            //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
         }
     }
@@ -84,7 +88,8 @@ public class InputSpotActivity extends AppCompatActivity {
     public void onPostingButtonTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
-        byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        /*
         try {
             dateParse = sdf.parse(mDate.getText().toString());
             ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
@@ -96,25 +101,28 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        final Date date = dateParse;
-
+        */
+        //final Date date = dateParse;
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
                 Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 long nextId = 0;
                 if(maxId != null) nextId = maxId.longValue() + 1;
-                realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class);
+                //realm.beginTransaction();
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                footmarkDataTable.setPlaceDate(date);
-                footmarkDataTable.setLatitude(latitude);
-                footmarkDataTable.setLongitude(longitude);
+                //footmarkDataTable.setPlaceDate(date);
+                //footmarkDataTable.setLatitude(latitude);
+                //footmarkDataTable.setLongitude(longitude);
+                //realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
+
+        startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
     }
 
     @Override

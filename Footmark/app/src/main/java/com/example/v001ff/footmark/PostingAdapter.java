@@ -33,9 +33,9 @@ public class PostingAdapter extends RealmBaseAdapter<FootmarkDataTable> {
                     android.R.layout.simple_list_item_2, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.PlaceName =
-                    (TextView) convertView.findViewById(android.R.id.text1);
+                    convertView.findViewById(android.R.id.text1);
             viewHolder.ReviewBody =
-                    (TextView) convertView.findViewById(android.R.id.text2);
+                    convertView.findViewById(android.R.id.text2);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder)convertView.getTag();

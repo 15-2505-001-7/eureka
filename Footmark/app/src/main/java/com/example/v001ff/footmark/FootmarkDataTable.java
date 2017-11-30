@@ -21,7 +21,7 @@ public class FootmarkDataTable extends RealmObject {
     private byte[] PlaceImage;              //投稿された場所のイメージ画像
     private Date PlaceDate;                  //投稿された場所の追加された時の日付
     private String Title;                     //レビュータイトル
-    private String ReviewBody;                      //レビュー本文
+    private String ReviewBody;               //レビュー本文
     private Date ReviewDate;                 //レビューが投稿された日付
     private long MyPlaceName;               //ユーザー自身が投稿した場所の名前
     private String MyLatitude;                //ユーザー自身が投稿した場所の緯度
@@ -48,9 +48,7 @@ public class FootmarkDataTable extends RealmObject {
         return PlaceName;
     }
 
-    public String getLatitude() {
-        return Latitude;
-    }
+    public String getLatitude() {return Latitude;}
 
     public String getLongitude() {
         return Longitude;

@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import java.io.ByteArrayOutputStream;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -72,10 +74,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
-            ((ImageView) findViewById(R.id.image)).setImageBitmap(capturedImage);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
         }
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mRealm.close();
+    }
     //データベースの中身表示
 
     /*
