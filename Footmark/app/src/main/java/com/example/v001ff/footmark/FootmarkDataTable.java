@@ -11,17 +11,17 @@ import io.realm.annotations.PrimaryKey;
 
 public class FootmarkDataTable extends RealmObject {
     @PrimaryKey
+    private int PlaceId;                     //投稿された場所を管理するためのID
     private long AccountId;                  //アカウントID
     private byte[] AccountImage;            //アカウント画像
     private String AccountName;              //アカウント名
-    private int PlaceId;                     //投稿された場所を管理するためのID
     private String PlaceName;                //投稿された場所の名前
     private String Latitude;                  //投稿された場所の緯度
     private String Longitude;                 //投稿された場所の経度
     private byte[] PlaceImage;              //投稿された場所のイメージ画像
     private Date PlaceDate;                  //投稿された場所の追加された時の日付
     private String Title;                     //レビュータイトル
-    private String ReviewBody;                      //レビュー本文
+    private String ReviewBody;               //レビュー本文
     private Date ReviewDate;                 //レビューが投稿された日付
     private long MyPlaceName;               //ユーザー自身が投稿した場所の名前
     private String MyLatitude;                //ユーザー自身が投稿した場所の緯度
