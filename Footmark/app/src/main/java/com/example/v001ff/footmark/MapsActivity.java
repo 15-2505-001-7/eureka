@@ -150,13 +150,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onButton2Tapped(View view){
         Intent intent = new Intent(this,MainActivity.class);
-
         startActivity(intent);
     }
 
     @Override
     public void onInfoWindowClick(Marker marker) {
         Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
+        //Intent intent = new Intent(this, ShowSpotActivity.class);
         startActivity(intent);
     }
 }
