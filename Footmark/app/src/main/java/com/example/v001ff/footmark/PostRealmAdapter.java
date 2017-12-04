@@ -18,25 +18,25 @@ import io.realm.RealmRecyclerViewAdapter;
  * Created by enPiT-P7 on 2017/11/16.
  */
 
-public class PostRealmAdapter extends RealmRecyclerViewAdapter<Post, PostRealmAdapter.PostViewHolder> {
+public class PostRealmAdapter extends RealmRecyclerViewAdapter<FootmarkDataTable, PostRealmAdapter.PostViewHolder> {
     Context context;
 
     public static class PostViewHolder extends RecyclerView.ViewHolder{
-        protected TextView userName;
-        protected TextView spotInfo;
-        protected TextView date;
-        protected ImageView userPhoto;
+        protected TextView AccountName;
+        protected TextView ReviewBody;
+        protected TextView ReviewDate;
+        protected ImageView AccountImage;
 
         public PostViewHolder(View itemView){
             super(itemView);
-            userName = (TextView) itemView.findViewById(R.id.username);
-            spotInfo = (TextView) itemView.findViewById(R.id.spotinfo);
-            date = (TextView) itemView.findViewById(R.id.date);
-            userPhoto = (ImageView) itemView.findViewById(R.id.userphoto);
+            AccountName = (TextView) itemView.findViewById(R.id.username);
+            ReviewBody = (TextView) itemView.findViewById(R.id.spotinfo);
+            ReviewDate = (TextView) itemView.findViewById(R.id.date);
+            AccountImage = (ImageView) itemView.findViewById(R.id.userphoto);
         }
     }
 
-    public PostRealmAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<Post> data,
+    public PostRealmAdapter(@NonNull Context context, @Nullable OrderedRealmCollection<FootmarkDataTable>data,
                             boolean autoUpdate) {
         super(data, autoUpdate);
         this.context = context;
@@ -64,13 +64,13 @@ public class PostRealmAdapter extends RealmRecyclerViewAdapter<Post, PostRealmAd
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position){
-        Post post = getData().get(position);
-        holder.userName.setText(post.userName);
-        holder.spotInfo.setText(post.spotInfo);
-        holder.date.setText(post.date);
-        if(post.userPhoto != null && post.userPhoto.length != 0){
-            Bitmap bmp = MyUtils.getImageFromByte(post.userPhoto);
-            holder.userPhoto.setImageBitmap(bmp);
+        FootmarkDataTable post = getData().get(position);
+        holder.AccountName.setText(post.AccountName);
+        holder.ReviewBody.setText(post.ReviewBody);
+        holder.ReviewDate.setText((CharSequence) post.ReviewDate);
+        if(post.AccountImage != null && post.AccountImage.length != 0){
+            Bitmap bmp = MyUtils.getImageFromByte(post.AccountImage);
+            holder.AccountImage.setImageBitmap(bmp);
         }
     }
 }

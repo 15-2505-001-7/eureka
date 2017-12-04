@@ -58,7 +58,7 @@ public class PostListFragment extends Fragment {
 
         recyclerView.setLayoutManager(llm);
 
-        RealmResults<Post> diaries = mRealm.where(Post.class).findAll();
+        RealmResults<FootmarkDataTable> diaries = mRealm.where(FootmarkDataTable.class).findAll();
         PostRealmAdapter adapter = new PostRealmAdapter(getActivity(), diaries, true);
 
         recyclerView.setAdapter(adapter);

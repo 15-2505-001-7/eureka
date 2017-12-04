@@ -23,7 +23,7 @@ public class ShowSpotActivity extends AppCompatActivity
 
         mRealm = Realm.getDefaultInstance();
 
-        createTestData();
+        //createTestData();
         showSpotList();
     }
 
@@ -33,20 +33,20 @@ public class ShowSpotActivity extends AppCompatActivity
         mRealm.close();
     }
 
-    private void createTestData() {
+    /*private void createTestData() {
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm) {
-                Number maxId = mRealm.where(Post.class) .max("id");
+                Number maxId = mRealm.where(FootmarkDataTable.class) .max("PlaceId");
                 long nextId = 0;
             if(maxId != null) nextId = maxId.longValue() + 1;
-            Post post = realm.createObject(Post.class, new Long(nextId));
-            post.userName = "ユーザーの名前";
-            post.spotInfo = "場所の情報";
+            FootmarkDataTable post = realm.createObject(FootmarkDataTable.class, new Long(nextId));
+            post.getAccountName();
+            post.getReviewBody();
             post.date = "Feb 22";
             }
         });
-    }
+    }*/
 
     private void showSpotList() {
         FragmentManager manager = getSupportFragmentManager();
