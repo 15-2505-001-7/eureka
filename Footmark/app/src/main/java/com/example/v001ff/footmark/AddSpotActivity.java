@@ -24,8 +24,8 @@ import io.realm.Realm;
 public class AddSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
-    private EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
-    private EditText mAddReview;                                //投稿画面のレビュー部分に対応
+    EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
+    EditText mAddReview;                                //投稿画面のレビュー部分に対応
     private EditText mDate;                                      //投稿された日時
     String latitudeRef;                                          //画像から取得する緯度
     String latitude;
