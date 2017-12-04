@@ -1,15 +1,18 @@
 package com.example.v001ff.footmark;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Toast;
 
 import io.realm.Realm;
 
 public class ShowSpotActivity extends AppCompatActivity
-        implements PostListFragment.OnFragmentInteractionListener {
+        implements PostListFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     private Realm mRealm;
 
@@ -20,7 +23,7 @@ public class ShowSpotActivity extends AppCompatActivity
 
         mRealm = Realm.getDefaultInstance();
 
-        //createTestData();
+        createTestData();
         showSpotList();
     }
 
@@ -57,7 +60,15 @@ public class ShowSpotActivity extends AppCompatActivity
     }
 
     @Override
-    public void onAddDiarySelected(){
+    public void onAddDiarySelected() {
+        Toast.makeText(this, "押されました", Toast.LENGTH_SHORT).show();
+        //Intent intent = new Intent(this,AddSpotActivity.class);
+        //startActivity(intent);
+    }
 
+    @Override
+    public void onClick(View view) {
+        Intent intent = new Intent(getApplication(), AddSpotActivity.class);
+        startActivity(intent);
     }
 }
