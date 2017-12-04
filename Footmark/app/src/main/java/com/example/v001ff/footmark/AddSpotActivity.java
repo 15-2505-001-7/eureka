@@ -43,7 +43,6 @@ public class AddSpotActivity extends AppCompatActivity {
         setContentView(R.layout.fragment_add_spot);
 
         mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
-        mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
         mAddReview = (EditText) findViewById(R.id.addReview);
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
@@ -111,7 +110,6 @@ public class AddSpotActivity extends AppCompatActivity {
                 if(maxId != null) nextId = maxId.longValue() + 1;
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
-                footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 //footmarkDataTable.setPlaceDate(date);
                 //footmarkDataTable.setLatitude(latitude);
