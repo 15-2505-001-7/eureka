@@ -64,7 +64,8 @@ public class PostRealmAdapter extends RealmRecyclerViewAdapter<FootmarkDataTable
 
     @Override
     public void onBindViewHolder(PostViewHolder holder, int position){
-        FootmarkDataTable post = getData().get(position);
+        //FootmarkDataTable post = getData().get(position);
+        FootmarkDataTable post = getItem(getItemCount()-1-position);
         holder.AccountName.setText(post.AccountName);
         holder.ReviewBody.setText(post.ReviewBody);
         holder.ReviewDate.setText((CharSequence) post.ReviewDate);
