@@ -27,7 +27,7 @@ public class InputSpotActivity extends AppCompatActivity {
 
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
     EditText mAddReview;                                //投稿画面のレビュー部分に対応
-    private EditText mDate;                                      //投稿された日時
+    //private Date mDate;                                      //投稿された日時
     String latitudeRef;                                          //画像から取得する緯度
     String latitude;
     String longitudeRef;                                         //画像から取得する経度
@@ -42,7 +42,7 @@ public class InputSpotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_input_spot);
 
-        mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
+        mRealm = Realm.getDefaultInstance();//Realmを使用する準備。Realmクラスのインスタンスを取得している
         mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
         mAddReview = (EditText) findViewById(R.id.addReview);
 
@@ -89,20 +89,18 @@ public class InputSpotActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
-        /*
         try {
-            dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            dateParse = sdf.parse(dateParse.toString());
+            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        */
-        //final Date date = dateParse;
+        final Date date = dateParse;
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -113,7 +111,8 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setPlaceDate(date);
+                //footmarkDataTable.setReviewDate(sdf.toString());
+                footmarkDataTable.setReviewDate(date);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
