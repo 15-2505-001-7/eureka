@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -88,8 +89,8 @@ public class InputSpotActivity extends AppCompatActivity {
     public void onPostingButtonTapped(View view) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
-        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
-        /*
+        byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+
         try {
             dateParse = sdf.parse(mDate.getText().toString());
             ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
@@ -101,8 +102,8 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        */
-        //final Date date = dateParse;
+
+        final Date date = dateParse;
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -113,10 +114,10 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setPlaceDate(date);
-                //footmarkDataTable.setLatitude(latitude);
-                //footmarkDataTable.setLongitude(longitude);
-                //realm.commitTransaction();
+                footmarkDataTable.setPlaceDate(date);
+                footmarkDataTable.setLatitude(latitude);
+                footmarkDataTable.setLongitude(longitude);
+                realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く

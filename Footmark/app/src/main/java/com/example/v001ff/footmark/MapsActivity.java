@@ -20,6 +20,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
@@ -27,6 +32,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
+    private Realm mRealm;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             checkPermission();
         else
             start();
+
+        mRealm = Realm.getDefaultInstance();                  //データベース使用する準備
     }
 
 
@@ -65,6 +73,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
         mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
+
+
+
+
+        Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
+        ArrayList<LatLng> latlng = new ArrayList<LatLng>();
+        for(int i=0; i<maxPlace.intValue(); i++){
+            RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", "i").findAll();
+            FootmarkDataTable footmarkdatatable = query.first();
+            String stringLatitude = footmarkdatatable.getLatitude();
+            double Latitude = Double.parseDouble(stringLatitude);
+            String stringLongitude = footmarkdatatable.getLongitude();
+            double Longitude = Double.parseDouble(stringLongitude);
+            String mTitle = footmarkdatatable.getTitle();
+
+            latlng.add(new LatLng(Latitude,Longitude));
+            mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mTitle)
+                    .icon(BitmapDescriptorFactory.fromResource(sample)));
+        }
 
 
 
