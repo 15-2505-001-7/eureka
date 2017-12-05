@@ -41,7 +41,8 @@ public class PostingAdapter extends RealmBaseAdapter<FootmarkDataTable> {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        FootmarkDataTable footmarkDataTable = adapterData.get(position);
+        //FootmarkDataTable footmarkDataTable = adapterData.get(position);
+        FootmarkDataTable footmarkDataTable = getItem(getCount()-1-position);
         viewHolder.PlaceName.setText(footmarkDataTable.getPlaceName());
         viewHolder.ReviewBody.setText(footmarkDataTable.getReviewBody());
         return convertView;
