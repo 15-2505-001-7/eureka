@@ -3,6 +3,8 @@ package com.example.v001ff.footmark;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,7 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -73,7 +78,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
         mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
+        final Date mDate = new Date();
+        ImageView photo1 = (ImageView) findViewById(R.drawable.demo1);            //デモ用の画像をここで設定してます.
+        Bitmap bmp1 = ((BitmapDrawable) photo1.getDrawable()).getBitmap();
+        final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
+        ImageView photo2 = (ImageView) findViewById(R.drawable.demo2);
+        Bitmap bmp2 = ((BitmapDrawable) photo1.getDrawable()).getBitmap();
+        final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
 
+        mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
+            @Override
+            public void execute(Realm realm){
+                realm.beginTransaction();
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
+                footmarkDataTable.setPlaceName("山口大学工学部");
+                footmarkDataTable.setTitle("デモ用です");
+                footmarkDataTable.setReviewBody("デモ用です");
+                footmarkDataTable.setPlaceDate(mDate);
+                footmarkDataTable.setReviewDate(mDate);
+                footmarkDataTable.setPlaceImage(bytes1);
+                footmarkDataTable.setLatitude("33.9567058");
+                footmarkDataTable.setLongitude("131.2727738");
+                realm.commitTransaction();
+
+                realm.beginTransaction();
+                footmarkDataTable = realm.createObject(FootmarkDataTable.class, 1);
+                footmarkDataTable.setPlaceName("フジグラン宇部");
+                footmarkDataTable.setTitle("デモ用です");
+                footmarkDataTable.setReviewBody("デモ用です");
+                footmarkDataTable.setPlaceDate(mDate);
+                footmarkDataTable.setReviewDate(mDate);
+                footmarkDataTable.setPlaceImage(bytes2);
+                footmarkDataTable.setLatitude("33.9304745");
+                footmarkDataTable.setLongitude("131.2556893");
+                realm.commitTransaction();
+            }
+        });
 
 
 
@@ -83,13 +124,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", "i").findAll();
             FootmarkDataTable footmarkdatatable = query.first();
             String stringLatitude = footmarkdatatable.getLatitude();
-            double Latitude = Double.parseDouble(stringLatitude);
+            double Latitude = Double.parseDouble(stringLatitude);                   //PlaceIdに対応する緯度の取得
             String stringLongitude = footmarkdatatable.getLongitude();
-            double Longitude = Double.parseDouble(stringLongitude);
-            String mTitle = footmarkdatatable.getTitle();
+            double Longitude = Double.parseDouble(stringLongitude);                 //PlaceIdに対応する経度の取得
+            String mPlaceName = footmarkdatatable.getPlaceName();                   //PlaceIdに対応する場所の名前の取得
 
-            latlng.add(new LatLng(Latitude,Longitude));
-            mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mTitle)
+            latlng.add(new LatLng(Latitude,Longitude));                             //緯度経度を渡してlatlngクラス作成
+            mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mPlaceName)
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
 

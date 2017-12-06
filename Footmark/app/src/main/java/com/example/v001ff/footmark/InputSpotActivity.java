@@ -108,8 +108,8 @@ public class InputSpotActivity extends AppCompatActivity {
             @Override
             public void execute(Realm realm){
                 Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                long nextId = 0;
-                if(maxId != null) nextId = maxId.longValue() + 1;
+                int nextId = 0;
+                if(maxId != null) nextId = maxId.intValue() + 1;
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
@@ -117,6 +117,7 @@ public class InputSpotActivity extends AppCompatActivity {
                 footmarkDataTable.setPlaceDate(date);
                 footmarkDataTable.setLatitude(latitude);
                 footmarkDataTable.setLongitude(longitude);
+                footmarkDataTable.setPlaceId(nextId);                                     //PlaceIdを連番で管理
                 realm.commitTransaction();
             }
         });
