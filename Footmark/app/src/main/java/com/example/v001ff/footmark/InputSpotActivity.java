@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -93,8 +92,8 @@ public class InputSpotActivity extends AppCompatActivity {
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         //String dateParse = new String();
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        Date dateParse = new Date();
+        //SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+        //Date dateParse = new Date();
         byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
         try {
@@ -108,10 +107,7 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-       // final String date2 = dateParse.toString();
         final String date2 = df.format(date);
-
-        final Date date = dateParse;
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -122,11 +118,11 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                footmarkDataTable.setPlaceDate(date);
-                footmarkDataTable.setLatitude(latitude);
-                footmarkDataTable.setLongitude(longitude);
-                footmarkDataTable.setPlaceId(nextId);                                     //PlaceIdを連番で管理
-                realm.commitTransaction();
+                //footmarkDataTable.setPlaceDate(date);
+                //footmarkDataTable.setLatitude(latitude);
+                //footmarkDataTable.setLongitude(longitude);
+                //footmarkDataTable.setPlaceId(nextId);                                     //PlaceIdを連番で管理
+                //realm.commitTransaction();
                 //footmarkDataTable.setReviewDate(sdf.toString();
                 footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setLatitude(latitude);
