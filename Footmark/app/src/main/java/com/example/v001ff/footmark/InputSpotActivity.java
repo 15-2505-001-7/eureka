@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -86,12 +87,13 @@ public class InputSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
-        long currentTimeMillis = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        Date dateParse = new Date(currentTimeMillis);
+        //long currentTimeMillis = System.currentTimeMillis();
+        final Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+        //String dateParse = new String();
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         try {
-            dateParse = sdf.parse(dateParse.toString());
+            //String date2 = df.format(date);
             /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
@@ -101,7 +103,8 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        final String date = dateParse.toString();
+       // final String date2 = dateParse.toString();
+        final String date2 = df.format(date);
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -112,8 +115,8 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setReviewDate(sdf.toString());
-                footmarkDataTable.setReviewDate(date);
+                //footmarkDataTable.setReviewDate(sdf.toString();
+                footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
