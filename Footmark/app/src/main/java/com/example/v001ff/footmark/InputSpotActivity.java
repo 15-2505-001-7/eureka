@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +29,7 @@ public class InputSpotActivity extends AppCompatActivity {
 
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
     EditText mAddReview;                                //投稿画面のレビュー部分に対応
-    private EditText mDate;                                      //投稿された日時
+    //private Date mDate;                                      //投稿された日時
     String latitudeRef;                                          //画像から取得する緯度
     String latitude;
     String longitudeRef;                                         //画像から取得する経度
@@ -43,7 +44,7 @@ public class InputSpotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_input_spot);
 
-        mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
+        mRealm = Realm.getDefaultInstance();//Realmを使用する準備。Realmクラスのインスタンスを取得している
         mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
         mAddReview = (EditText) findViewById(R.id.addReview);
 
@@ -87,21 +88,28 @@ public class InputSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
+        //long currentTimeMillis = System.currentTimeMillis();
+        final Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+        //String dateParse = new String();
+        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
         byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
         try {
-            dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //String date2 = df.format(date);
+            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
+       // final String date2 = dateParse.toString();
+        final String date2 = df.format(date);
 
         final Date date = dateParse;
         mRealm.executeTransaction(new Realm.Transaction(){
@@ -119,6 +127,11 @@ public class InputSpotActivity extends AppCompatActivity {
                 footmarkDataTable.setLongitude(longitude);
                 footmarkDataTable.setPlaceId(nextId);                                     //PlaceIdを連番で管理
                 realm.commitTransaction();
+                //footmarkDataTable.setReviewDate(sdf.toString();
+                footmarkDataTable.setReviewDate(date2);
+                //footmarkDataTable.setLatitude(latitude);
+                //footmarkDataTable.setLongitude(longitude);
+                //realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く
