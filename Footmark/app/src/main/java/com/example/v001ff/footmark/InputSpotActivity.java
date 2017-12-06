@@ -116,6 +116,7 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
+                footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setPlaceDate(date);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
@@ -125,7 +126,7 @@ public class InputSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override
