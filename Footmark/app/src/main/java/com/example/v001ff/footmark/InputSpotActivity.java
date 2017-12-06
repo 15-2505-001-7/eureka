@@ -125,7 +125,7 @@ public class InputSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override
