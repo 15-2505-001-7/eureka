@@ -86,8 +86,9 @@ public class InputSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
+        long currentTimeMillis = System.currentTimeMillis();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        Date dateParse = new Date();
+        Date dateParse = new Date(currentTimeMillis);
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         try {
             dateParse = sdf.parse(dateParse.toString());
@@ -100,7 +101,7 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        final Date date = dateParse;
+        final String date = dateParse.toString();
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){

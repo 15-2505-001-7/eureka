@@ -22,7 +22,7 @@ public class FootmarkDataTable extends RealmObject {
     private Date PlaceDate;                  //投稿された場所の追加された時の日付
     private String Title;                     //レビュータイトル
     public String ReviewBody;               //レビュー本文
-    public Date ReviewDate;                 //レビューが投稿された日付
+    public String ReviewDate;                 //レビューが投稿された日付
     private long MyPlaceName;               //ユーザー自身が投稿した場所の名前
     private String MyLatitude;                //ユーザー自身が投稿した場所の緯度
     private String MyLongitude;               //ユーザー自身が投稿した場所の経度
@@ -70,7 +70,7 @@ public class FootmarkDataTable extends RealmObject {
         return ReviewBody;
     }
 
-    public Date getReviewDate() {               //引数を変更するためのセッター
+    public String getReviewDate() {               //引数を変更するためのセッター
         return ReviewDate;
     }
 
@@ -129,7 +129,7 @@ public class FootmarkDataTable extends RealmObject {
 
     public void setReviewBody(String reviewBody)  { ReviewBody = reviewBody;}
 
-    public void setReviewDate(Date reviewDate) {
+    public void setReviewDate(String reviewDate) {
         ReviewDate = reviewDate;
     }
 
