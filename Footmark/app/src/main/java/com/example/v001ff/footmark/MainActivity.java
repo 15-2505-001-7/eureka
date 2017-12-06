@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         //リストビューにアダプターを設定
         mRealm = Realm.getDefaultInstance();
 
+        //ここでエラー
         mListView = (ListView) findViewById(R.id.listView);
         RealmResults<FootmarkDataTable> footmarkDataTables
                 = mRealm.where(FootmarkDataTable.class).findAll();

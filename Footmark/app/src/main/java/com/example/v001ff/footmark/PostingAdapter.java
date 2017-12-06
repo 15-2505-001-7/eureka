@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import io.realm.OrderedRealmCollection;
@@ -18,6 +19,7 @@ public class PostingAdapter extends RealmBaseAdapter<FootmarkDataTable> {
     private static class ViewHolder {
         TextView PlaceName;
         TextView ReviewBody;
+        ImageView photo;
     }
 
     public PostingAdapter(@Nullable OrderedRealmCollection<FootmarkDataTable> data) {

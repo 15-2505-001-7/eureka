@@ -12,13 +12,23 @@ public class ShowSpotActivity extends AppCompatActivity
         implements PostListFragment.OnFragmentInteractionListener {
 
     private Realm mRealm;
+    //private ListView mListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_spot);
 
+        //リストビューにアダプタを設定
         mRealm = Realm.getDefaultInstance();
+
+        /*
+        mListView = (ListView) findViewById(R.id.listView);
+        RealmResults<FootmarkDataTable> footmarkDataTables
+                = mRealm.where(FootmarkDataTable.class).findAll();
+        PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
+        mListView.setAdapter(adapter);
+        */
 
         //createTestData();
         showSpotList();

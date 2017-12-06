@@ -36,7 +36,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="#ffBB33"
-        android:onClick="onPostingButtonTapped"
+        android:onClick="onClick"
         android:text="投稿する"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"

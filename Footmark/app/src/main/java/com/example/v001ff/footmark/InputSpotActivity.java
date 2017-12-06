@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -22,11 +23,14 @@ import java.util.Date;
 
 import io.realm.Realm;
 
-public class InputSpotActivity extends AppCompatActivity {
+import static com.example.v001ff.footmark.R.id.spot_photo;
+
+public class InputSpotActivity extends AppCompatActivity implements View.OnClickListener {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
     EditText mAddReview;                                //投稿画面のレビュー部分に対応
+    ImageView mSpotPhoto;                               //投稿画面の画像部分に対応
     private EditText mDate;                                      //投稿された日時
     String latitudeRef;                                          //画像から取得する緯度
     String latitude;
@@ -45,9 +49,10 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
         mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
         mAddReview = (EditText) findViewById(R.id.addReview);
+        mSpotPhoto = (ImageView) findViewById(spot_photo);
 
-        ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
-        spot_photo.setOnClickListener(new View.OnClickListener(){
+        //ImageView spot_photo = (ImageView) findViewById(spot_photo);
+        mSpotPhoto.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {                        //カメラ起動するための処理。試作。
 
                 int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
@@ -81,18 +86,30 @@ public class InputSpotActivity extends AppCompatActivity {
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
-            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            //((ImageView) findViewById(spot_photo)).setImageBitmap(capturedImage);
+            mSpotPhoto.setImageBitmap(capturedImage);
         }
     }
 
-    public void onPostingButtonTapped(View view) {
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        //（課題）撮影場所の位置情報を取得する
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
-        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
-        /*
+
+        final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+
         try {
             dateParse = sdf.parse(mDate.getText().toString());
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //ExifInterface exifInterface = new ExifInterface(capturedImage.toString());
+            ExifInterface exifInterface = new ExifInterface(String.valueOf(mSpotPhoto));              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -101,8 +118,10 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        */
-        //final Date date = dateParse;
+
+        final Date date = dateParse;
+        //final byte[] bytes = MyUtils.getByteFromImage(footmarkDataTable.PlaceImage);
+
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -113,9 +132,10 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setPlaceDate(date);
-                //footmarkDataTable.setLatitude(latitude);
-                //footmarkDataTable.setLongitude(longitude);
+                footmarkDataTable.setPlaceDate(date);
+                footmarkDataTable.setLatitude(latitude);
+                footmarkDataTable.setLongitude(longitude);
+                //footmarkDataTable.setPlaceImage(bytes);  //画像データをデータベースに保存
                 //realm.commitTransaction();
             }
         });
@@ -124,11 +144,4 @@ public class InputSpotActivity extends AppCompatActivity {
 
         startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
-    }
-
 }
