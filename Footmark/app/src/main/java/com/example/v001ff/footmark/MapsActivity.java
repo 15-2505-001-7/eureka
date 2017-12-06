@@ -3,8 +3,6 @@ package com.example.v001ff.footmark;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -12,7 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,12 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
@@ -78,6 +70,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
         mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
+/*        ここから先はデータベースの処理です
+ *        画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
+ *
+
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
         final Date mDate = new Date();
         ImageView photo1 = (ImageView) findViewById(R.drawable.demo1);            //デモ用の画像をここで設定してます.
@@ -117,6 +113,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
+        ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
+
 
         Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
@@ -134,7 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
 
-
+*/
 
 
 
