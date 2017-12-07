@@ -62,8 +62,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));
-        mMap.setOnInfoWindowClickListener(this);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
+        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
+
 
 
 
@@ -159,4 +160,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Intent intent = new Intent(this, ShowSpotActivity.class);
         startActivity(intent);
     }
+
+
 }

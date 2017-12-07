@@ -22,12 +22,12 @@ import java.util.Date;
 
 import io.realm.Realm;
 
-public class InputSpotActivity extends AppCompatActivity {
+public class AddSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
     EditText mAddReview;                                //投稿画面のレビュー部分に対応
-    //private Date mDate;                                      //投稿された日時
+    private EditText mDate;                                      //投稿された日時
     String latitudeRef;                                          //画像から取得する緯度
     String latitude;
     String longitudeRef;                                         //画像から取得する経度
@@ -40,10 +40,9 @@ public class InputSpotActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_input_spot);
+        setContentView(R.layout.fragment_add_spot);
 
-        mRealm = Realm.getDefaultInstance();//Realmを使用する準備。Realmクラスのインスタンスを取得している
-        mAddPlaceName = (EditText) findViewById(R.id.addPlaceName);
+        mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
         mAddReview = (EditText) findViewById(R.id.addReview);
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
@@ -55,9 +54,9 @@ public class InputSpotActivity extends AppCompatActivity {
                 if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
                     // Android 6.0 のみ、カメラパーミッションが許可されていない場合
                     final int REQUEST_CODE = 1;
-                    ActivityCompat.requestPermissions(InputSpotActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);            //修正予定ですごめんなさい
+                    ActivityCompat.requestPermissions(AddSpotActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CODE);            //修正予定ですごめんなさい
 
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(InputSpotActivity.this, Manifest.permission.CAMERA)) {                //修正予定ですごめんなさい
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(AddSpotActivity.this, Manifest.permission.CAMERA)) {                //修正予定ですごめんなさい
                         // パーミッションが必要であることを明示するアプリケーション独自のUIを表示
                         Snackbar.make(view, R.string.rationale, Snackbar.LENGTH_LONG).show();
                     }
@@ -81,8 +80,7 @@ public class InputSpotActivity extends AppCompatActivity {
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
-            //((ImageView) findViewById(spot_photo)).setImageBitmap(capturedImage);
-            mSpotPhoto.setImageBitmap(capturedImage);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
         }
     }
 
@@ -90,18 +88,20 @@ public class InputSpotActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         Date dateParse = new Date();
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        /*
         try {
-            dateParse = sdf.parse(dateParse.toString());
-            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            dateParse = sdf.parse(mDate.getText().toString());
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        final Date date = dateParse;
+        */
+        //final Date date = dateParse;
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -110,10 +110,8 @@ public class InputSpotActivity extends AppCompatActivity {
                 if(maxId != null) nextId = maxId.longValue() + 1;
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
-                footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setReviewDate(sdf.toString());
-                footmarkDataTable.setReviewDate(date);
+                //footmarkDataTable.setPlaceDate(date);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
@@ -122,7 +120,7 @@ public class InputSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
+        startActivity(new Intent(AddSpotActivity.this, MainActivity.class));
     }
 
     @Override
