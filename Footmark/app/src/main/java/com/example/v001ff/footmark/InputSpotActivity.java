@@ -105,7 +105,6 @@ public class InputSpotActivity extends AppCompatActivity {
         catch (Exception ex) {
             ex.printStackTrace();
         }
-       // final String date2 = dateParse.toString();
         final String date2 = df.format(date);
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
@@ -113,7 +112,7 @@ public class InputSpotActivity extends AppCompatActivity {
                 Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 long nextId = 0;
                 if(maxId != null) nextId = maxId.longValue() + 1;
-                realm.beginTransaction();
+                //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
@@ -122,7 +121,7 @@ public class InputSpotActivity extends AppCompatActivity {
                 footmarkDataTable.setPlaceImage(bytes);
                 footmarkDataTable.setLatitude(latitude);
                 footmarkDataTable.setLongitude(longitude);
-                realm.commitTransaction();
+                //realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く
