@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -19,9 +20,9 @@ import android.widget.ListView;
 import java.io.ByteArrayOutputStream;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements PostListFragment.OnFragmentInteractionListener {
+
     private Realm mRealm;
     private ListView mListView;
     //final static private String TAG = "screen2camera";
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener(){
@@ -61,12 +64,15 @@ public class MainActivity extends AppCompatActivity {
         //リストビューにアダプターを設定
         mRealm = Realm.getDefaultInstance();
 
-        //ここでエラー
+        /*
         mListView = (ListView) findViewById(R.id.listView);
         RealmResults<FootmarkDataTable> footmarkDataTables
                 = mRealm.where(FootmarkDataTable.class).findAll();
         PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
         mListView.setAdapter(adapter);
+        */
+
+
 
 
     }
@@ -86,8 +92,21 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         mRealm.close();
     }
+
+    @Override
+    public void onAddDiarySelected() {
+
+    }
     //データベースの中身表示
 
+    /*
+    private void createTestData(){
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm)
+        });
+    }
+    */
     /*
     public void onClickButton(View view){
         FloatingActionButton floatingActionButton = (FloatingActionButton)findViewById(R.id.button);
