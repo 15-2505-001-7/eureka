@@ -29,7 +29,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
-    private Realm mRealm;
+    Realm mRealm;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

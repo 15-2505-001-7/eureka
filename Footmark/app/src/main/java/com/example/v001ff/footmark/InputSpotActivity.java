@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -79,7 +80,7 @@ public class InputSpotActivity extends AppCompatActivity {
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-            Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+            capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
@@ -91,15 +92,15 @@ public class InputSpotActivity extends AppCompatActivity {
         final Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         //String dateParse = new String();
-        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
         try {
             //String date2 = df.format(date);
-            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -112,15 +113,16 @@ public class InputSpotActivity extends AppCompatActivity {
                 Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 long nextId = 0;
                 if(maxId != null) nextId = maxId.longValue() + 1;
-                //realm.beginTransaction();
+                realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setPlaceDate(date);
-                //footmarkDataTable.setLatitude(latitude);
-                //footmarkDataTable.setLongitude(longitude);
-                //realm.commitTransaction();
+                footmarkDataTable.setPlaceImage(bytes);
+                footmarkDataTable.setLatitude(latitude);
+                footmarkDataTable.setLongitude(longitude);
+                realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く
