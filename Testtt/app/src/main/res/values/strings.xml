@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Testtt</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_id_choice">IdChoice</string>
+</resources>

@@ -18,12 +18,11 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
-
-import static com.example.v001ff.footmark.R.id.spot_photo;
 
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
@@ -90,21 +89,25 @@ public class InputSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        Date dateParse = new Date();
+        //long currentTimeMillis = System.currentTimeMillis();
+        final Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+        //String dateParse = new String();
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+
         try {
-            dateParse = sdf.parse(dateParse.toString());
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //String date2 = df.format(date);
+            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        final Date date = dateParse;
+       // final String date2 = dateParse.toString();
+        final String date2 = df.format(date);
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -115,8 +118,8 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setReviewDate(sdf.toString());
-                footmarkDataTable.setReviewDate(date);
+                footmarkDataTable.setReviewDate(date2);
+                //footmarkDataTable.setPlaceDate(date);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
@@ -125,7 +128,7 @@ public class InputSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override
