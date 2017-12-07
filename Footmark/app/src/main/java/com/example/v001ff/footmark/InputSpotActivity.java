@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -21,6 +22,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
+
+import static com.example.v001ff.footmark.R.id.spot_photo;
 
 public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
@@ -81,8 +84,8 @@ public class InputSpotActivity extends AppCompatActivity {
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
-            //((ImageView) findViewById(spot_photo)).setImageBitmap(capturedImage);
-            mSpotPhoto.setImageBitmap(capturedImage);
+            ((ImageView) findViewById(spot_photo)).setImageBitmap(capturedImage);
+            //mSpotPhoto.setImageBitmap(capturedImage);
         }
     }
 
@@ -92,11 +95,11 @@ public class InputSpotActivity extends AppCompatActivity {
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         try {
             dateParse = sdf.parse(dateParse.toString());
-            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         }
         catch (Exception ex) {
             ex.printStackTrace();

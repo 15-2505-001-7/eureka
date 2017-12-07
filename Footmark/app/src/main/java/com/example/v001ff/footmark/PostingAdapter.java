@@ -20,6 +20,7 @@ public class PostingAdapter extends RealmBaseAdapter<FootmarkDataTable> {
         TextView PlaceName;
         TextView ReviewBody;
         ImageView photo;
+
     }
 
     public PostingAdapter(@Nullable OrderedRealmCollection<FootmarkDataTable> data) {
