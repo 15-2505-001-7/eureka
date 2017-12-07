@@ -3,6 +3,8 @@ package com.example.v001ff.footmark;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -10,6 +12,7 @@ import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +23,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.realm.Realm;
 
 import static com.example.v001ff.footmark.R.mipmap.sample;
@@ -29,7 +35,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
-    Realm mRealm;
+    private Realm mRealm;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +78,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 /*        ここから先はデータベースの処理です
           画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
-
+*/
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
-        final Date mDate = new Date();
+        Date date = new Date();
+        final String mDate = sdf.format(date);
         ImageView photo1 = (ImageView) findViewById(R.drawable.demo1);            //デモ用の画像をここで設定してます.
         Bitmap bmp1 = ((BitmapDrawable) photo1.getDrawable()).getBitmap();
         final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
@@ -86,32 +93,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
             @Override
             public void execute(Realm realm){
-                realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
                 footmarkDataTable.setPlaceName("山口大学工学部");
                 footmarkDataTable.setTitle("デモ用です");
                 footmarkDataTable.setReviewBody("デモ用です");
-                footmarkDataTable.setPlaceDate(mDate);
+                //footmarkDataTable.setPlaceDate(mDate);
                 footmarkDataTable.setReviewDate(mDate);
                 footmarkDataTable.setPlaceImage(bytes1);
                 footmarkDataTable.setLatitude("33.9567058");
                 footmarkDataTable.setLongitude("131.2727738");
-                realm.commitTransaction();
 
-                realm.beginTransaction();
                 footmarkDataTable = realm.createObject(FootmarkDataTable.class, 1);
                 footmarkDataTable.setPlaceName("フジグラン宇部");
                 footmarkDataTable.setTitle("デモ用です");
                 footmarkDataTable.setReviewBody("デモ用です");
-                footmarkDataTable.setPlaceDate(mDate);
+                //footmarkDataTable.setPlaceDate(mDate);
                 footmarkDataTable.setReviewDate(mDate);
                 footmarkDataTable.setPlaceImage(bytes2);
                 footmarkDataTable.setLatitude("33.9304745");
                 footmarkDataTable.setLongitude("131.2556893");
-                realm.commitTransaction();
             }
         });
-
+/*
 
         ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
 

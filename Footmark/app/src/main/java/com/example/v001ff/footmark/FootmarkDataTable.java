@@ -1,7 +1,5 @@
 package com.example.v001ff.footmark;
 
-import java.util.Date;
-
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -19,7 +17,7 @@ public class FootmarkDataTable extends RealmObject {
     private String Latitude;                  //投稿された場所の緯度
     private String Longitude;                 //投稿された場所の経度
     private byte[] PlaceImage;              //投稿された場所のイメージ画像
-    private Date PlaceDate;                  //投稿された場所の追加された時の日付
+    private String PlaceDate;                  //投稿された場所の追加された時の日付
     private String Title;                     //レビュータイトル
     public String ReviewBody;               //レビュー本文
     public String ReviewDate;                 //レビューが投稿された日付
@@ -58,7 +56,7 @@ public class FootmarkDataTable extends RealmObject {
         return PlaceImage;
     }
 
-    public Date getPlaceDate() {
+    public String getPlaceDate() {
         return PlaceDate;
     }
 
@@ -119,7 +117,7 @@ public class FootmarkDataTable extends RealmObject {
         PlaceImage = placeImage;
     }
 
-    public void setPlaceDate(Date placeDate) {
+    public void setPlaceDate(String placeDate) {
         PlaceDate = placeDate;
     }
 
