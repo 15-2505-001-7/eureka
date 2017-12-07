@@ -79,7 +79,7 @@ public class AddSpotActivity extends AppCompatActivity {
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
+            capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
         }
     }

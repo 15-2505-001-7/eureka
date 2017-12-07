@@ -73,15 +73,18 @@ public class InputSpotActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
+
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
-            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
+            capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
         }
     }
 
