@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -80,7 +82,7 @@ public class InputSpotActivity extends AppCompatActivity {
 
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-            Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+            capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
             capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
@@ -89,22 +91,24 @@ public class InputSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
-        long currentTimeMillis = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        Date dateParse = new Date(currentTimeMillis);
-        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        //long currentTimeMillis = System.currentTimeMillis();
+        final Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+        //String dateParse = new String();
+        final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+
         try {
-            dateParse = sdf.parse(dateParse.toString());
-            /*ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //String date2 = df.format(date);
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);*/
+            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
         }
         catch (Exception ex) {
             ex.printStackTrace();
         }
-        final String date = dateParse.toString();
+        final String date2 = df.format(date);
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -115,17 +119,18 @@ public class InputSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setReviewDate(sdf.toString());
-                footmarkDataTable.setReviewDate(date);
-                //footmarkDataTable.setLatitude(latitude);
-                //footmarkDataTable.setLongitude(longitude);
+                footmarkDataTable.setReviewDate(date2);
+                //footmarkDataTable.setPlaceDate(date);
+                footmarkDataTable.setPlaceImage(bytes);
+                footmarkDataTable.setLatitude(latitude);
+                footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MainActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override

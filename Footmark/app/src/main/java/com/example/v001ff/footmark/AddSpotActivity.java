@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -85,8 +86,8 @@ public class AddSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        Date dateParse = new Date();
+        final Date date = new Date();
+        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         /*
         try {
@@ -102,6 +103,7 @@ public class AddSpotActivity extends AppCompatActivity {
         }
         */
         //final Date date = dateParse;
+        final String date2 = df.format(date);
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
@@ -111,7 +113,7 @@ public class AddSpotActivity extends AppCompatActivity {
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                //footmarkDataTable.setPlaceDate(date);
+                footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
@@ -120,7 +122,7 @@ public class AddSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(AddSpotActivity.this, MainActivity.class));
+        startActivity(new Intent(AddSpotActivity.this, ShowSpotActivity.class));
     }
 
     @Override
