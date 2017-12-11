@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
@@ -177,7 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    //結果の受け取り
+    //パーミッション結果の受け取り
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         if ((requestCode == REQUEST_PERMISSION) &&
@@ -186,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             start();
     }
 
-    //InputSpotActivityに遷移
+    //右下のボタンをタップしたときにInputSpotActivityに遷移
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getApplication(), InputSpotActivity.class);
@@ -229,15 +230,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
-    public void onButton2Tapped(View view){
+    public void onButton2Tapped(View view){                     //実験場への道
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void onInfoWindowClick(Marker marker) {              //マーカーの上の情報ウィンドウをタップしたときの処理
+        String mPlaceName = marker.getTitle();                  //マーカーの場所の名前からデータベースを検索して,場所に対応するPlaceIdをもってくる.このPlaceIdで閲覧画面のデータを管理する
+        RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceName", mPlaceName).findAll();
+        FootmarkDataTable footmarkdatatable = query.first();
+        int mPlaceId = footmarkdatatable.getPlaceId();
         Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         //Intent intent = new Intent(this, ShowSpotActivity.class);
+        intent.putExtra("PlaceId",mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す
         startActivity(intent);
     }
 
