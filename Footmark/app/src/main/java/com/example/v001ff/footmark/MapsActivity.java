@@ -43,6 +43,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try {
+            Thread.sleep(2000);
+        }catch(InterruptedException e) {
+        }
+        setTheme(R.style.AppTheme);//splash表示する
+
         //対応検討中(も)
         //InputSpotFragment fragment = new InputSpotFragment();
         //getFragmentManager().beginTransaction().add

@@ -53,10 +53,10 @@
         */
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps">
+            android:label="@string/title_activity_maps"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -74,10 +74,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ShowSpotActivity" />
         <activity android:name=".AddSpotActivity" />
-        <activity
-            android:name=".TitleActivity"
-            android:label="@string/title_activity_title"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
