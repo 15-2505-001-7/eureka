@@ -20,6 +20,7 @@ import android.widget.ListView;
 import java.io.ByteArrayOutputStream;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements PostListFragment.OnFragmentInteractionListener {
 
@@ -65,13 +66,17 @@ public class MainActivity extends AppCompatActivity implements PostListFragment.
         mRealm = Realm.getDefaultInstance();
 
         /*
+        RealmResults<FootmarkDataTable> query
+                = mRealm.where(FootmarkDataTable.class).findAll();
+        FootmarkDataTable footmarkDataTable = query.first();
+        //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
+        */
+
         mListView = (ListView) findViewById(R.id.listView);
         RealmResults<FootmarkDataTable> footmarkDataTables
                 = mRealm.where(FootmarkDataTable.class).findAll();
         PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
         mListView.setAdapter(adapter);
-        */
-
 
 
 

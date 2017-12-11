@@ -1,15 +1,19 @@
 package com.example.v001ff.footmark;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class ShowSpotActivity extends AppCompatActivity
         implements PostListFragment.OnFragmentInteractionListener, View.OnClickListener {
@@ -32,6 +36,19 @@ public class ShowSpotActivity extends AppCompatActivity
         PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
         mListView.setAdapter(adapter);
         */
+        /*
+        Bitmap bitmap = BitmapFactory.decodeByteArray(getPlaceImage,0,getPlaceImage.length);
+        */
+        //Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
+        //ArrayList<LatLng> latlng = new ArrayList<LatLng>();
+        //RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", "0").findAll();
+
+        //データベースから画像の情報を取り出し、show_spot_activityに画像を表示
+        RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).findAll();
+        FootmarkDataTable footmarkdatatable = query.first();
+        byte[] bytes = footmarkdatatable.getPlaceImage();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        ((ImageView) findViewById(R.id.place_image)).setImageBitmap(bitmap);
 
         //createTestData();
         showSpotList();
@@ -67,6 +84,7 @@ public class ShowSpotActivity extends AppCompatActivity
             transaction.add(R.id.content, fragment, "PostListFragment");
             transaction.commit();
         }
+
     }
 
     @Override

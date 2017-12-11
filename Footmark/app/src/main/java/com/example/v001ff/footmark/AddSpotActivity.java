@@ -122,6 +122,16 @@ public class AddSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
+        //追加箇所
+        /*
+        RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).findAll();
+        FootmarkDataTable footmarkdatatable = query.first();
+        byte[] bytes = footmarkdatatable.getPlaceImage();
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        ((ImageView) findViewById(R.id.place_image)).setImageBitmap(bitmap);
+        */
+
+
         startActivity(new Intent(AddSpotActivity.this, ShowSpotActivity.class));
     }
 

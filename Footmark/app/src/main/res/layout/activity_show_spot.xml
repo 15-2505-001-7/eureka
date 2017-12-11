@@ -27,6 +27,12 @@
             android:orientation="horizontal"
             android:weightSum="1">
 
+            <ImageView
+                android:id="@+id/place_image"
+                android:layout_width="384dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@mipmap/asi" />
         </LinearLayout>
     </HorizontalScrollView>
 

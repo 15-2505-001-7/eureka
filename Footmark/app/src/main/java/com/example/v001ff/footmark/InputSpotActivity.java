@@ -85,8 +85,9 @@ public class InputSpotActivity extends AppCompatActivity {
             capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
-            capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
+            //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
         }
     }
 
@@ -124,13 +125,14 @@ public class InputSpotActivity extends AppCompatActivity {
                 footmarkDataTable.setPlaceImage(bytes);
                 footmarkDataTable.setLatitude(latitude);
                 footmarkDataTable.setLongitude(longitude);
+
                 //realm.commitTransaction();
             }
         });
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, ShowSpotActivity.class));
     }
 
     @Override
