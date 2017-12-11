@@ -249,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int mPlaceId = footmarkdatatable.getPlaceId();
         Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         //Intent intent = new Intent(this, ShowSpotActivity.class);
-        intent.putExtra("PlaceId",mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す
+        intent.putExtra("PlaceId",mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す."PlaceId"は受け渡し時のカギみたいなもの
         startActivity(intent);
     }
 
