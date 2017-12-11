@@ -15,6 +15,7 @@ public class ShowSpotActivity extends AppCompatActivity
         implements PostListFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     private Realm mRealm;
+    private int PID;                    //受け取ったPlaceIdをここに格納する
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,11 @@ public class ShowSpotActivity extends AppCompatActivity
 
         //createTestData();
         showSpotList();
+
+        Intent intent = getIntent();                    //ここでMapsActivityのintentからPlaceIdを取り出す
+        if(intent != null){
+            PID = intent.getIntExtra("PlaceId",0);      //PIDにPlaceIdを格納する.データがないときは0が返る.
+        }
     }
 
     @Override
@@ -53,6 +59,9 @@ public class ShowSpotActivity extends AppCompatActivity
         Fragment fragment = manager.findFragmentByTag("PostListFragment");
         if(fragment == null) {
             fragment = new PostListFragment();
+            Bundle args = new Bundle();                 //PostListFragmentにPlaceIdを渡すためにBundleを使う
+            args.putInt("PIDkey",PID);                  //BundleにPlaceIdをセット
+            fragment.setArguments(args);                //PostListFragmentにPlaceIdを渡す
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.add(R.id.content, fragment, "PostListFragment");
             transaction.commit();
