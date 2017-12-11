@@ -49,7 +49,9 @@ public class PostListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             Bundle args) {
+        int pid = args.getInt("PIDkey");
+        System.out.println(pid);
         View v = inflater.inflate(R.layout.fragment_post_list, container, false);
         RecyclerView recyclerView = /*(RecyclerView)*/ v.findViewById(R.id.recycler);
 

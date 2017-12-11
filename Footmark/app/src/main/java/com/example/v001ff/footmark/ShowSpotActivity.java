@@ -15,6 +15,7 @@ public class ShowSpotActivity extends AppCompatActivity
         implements PostListFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     private Realm mRealm;
+    private int PID; //受け取ったplaceID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +54,9 @@ public class ShowSpotActivity extends AppCompatActivity
         Fragment fragment = manager.findFragmentByTag("PostListFragment");
         if(fragment == null) {
             fragment = new PostListFragment();
+            Bundle args = new Bundle();
+            args.putInt("PIDkey",PID);
+            fragment.setArguments(args);
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.add(R.id.content, fragment, "PostListFragment");
             transaction.commit();
