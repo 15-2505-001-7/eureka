@@ -83,7 +83,8 @@ public class MainActivity extends AppCompatActivity implements PostListFragment.
             Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            capturedImage.compress(Bitmap.CompressFormat.PNG,0,byteArrayStream);
+            capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            //byte[] bytes = byteArrayStream.toByteArray();
         }
     }
 
