@@ -26,6 +26,8 @@ import io.realm.Realm;
 public class AddSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
+    private int PID;
+
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
     EditText mAddReview;                                //投稿画面のレビュー部分に対応
     private EditText mDate;                                      //投稿された日時
@@ -45,6 +47,12 @@ public class AddSpotActivity extends AppCompatActivity {
 
         mRealm = Realm.getDefaultInstance();                    //Realmを使用する準備。Realmクラスのインスタンスを取得している
         mAddReview = (EditText) findViewById(R.id.addReview);
+
+
+        Intent intent = getIntent();                    //ここでShowSpotActivityのintentからPlaceIdを取り出す
+        if(intent != null){
+            PID = intent.getIntExtra("PlaceId",0);      //PIDにPlaceIdを格納する.データがないときは0が返る.
+        }
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
         spot_photo.setOnClickListener(new View.OnClickListener(){
