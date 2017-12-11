@@ -52,17 +52,16 @@ public class PostListFragment extends Fragment {
                              Bundle args) {
         Bundle bundle = getArguments();                         //ShowSpotActivityでsetしたPlaceIdを取り出す.ShowSpotの62行目参照
         int pid = bundle.getInt("PIDkey");                      //pidにPlaceIdを格納
-        System.out.println(pid);
-        View v = inflater.inflate(R.layout.fragment_post_list, container, false);
-        RecyclerView recyclerView = /*(RecyclerView)*/ v.findViewById(R.id.recycler);
+        View v = inflater.inflate(R.layout.fragment_post_list, container, false);       //vにfragment_post_listを代入.ここではrecyclerビューを張り付けてるだけ
+        RecyclerView recyclerView = /*(RecyclerView)*/ v.findViewById(R.id.recycler);       //xmlに張り付けてるrecyclerビューを代入
 
         LinearLayoutManager llm = new LinearLayoutManager(getActivity());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
         recyclerView.setLayoutManager(llm);
 
-        RealmResults<FootmarkDataTable> diaries = mRealm.where(FootmarkDataTable.class).findAll();
-        PostRealmAdapter adapter = new PostRealmAdapter(getActivity(), diaries, true);
+        RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",pid).findAll();
+        PostRealmAdapter adapter = new PostRealmAdapter(getActivity(), query, true);
 
         recyclerView.setAdapter(adapter);
         return v;
