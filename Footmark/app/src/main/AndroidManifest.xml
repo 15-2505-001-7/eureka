@@ -73,7 +73,11 @@
             android:label="InputSpotActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ShowSpotActivity" />
-        <activity android:name=".AddSpotActivity"></activity>
+        <activity android:name=".AddSpotActivity" />
+        <activity
+            android:name=".TitleActivity"
+            android:label="@string/title_activity_title"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
