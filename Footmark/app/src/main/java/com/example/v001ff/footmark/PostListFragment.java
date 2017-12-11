@@ -50,7 +50,8 @@ public class PostListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle args) {
-        int pid = args.getInt("PIDkey");
+        Bundle bundle = getArguments();                         //ShowSpotActivityでsetしたPlaceIdを取り出す.ShowSpotの62行目参照
+        int pid = bundle.getInt("PIDkey");                      //pidにPlaceIdを格納
         System.out.println(pid);
         View v = inflater.inflate(R.layout.fragment_post_list, container, false);
         RecyclerView recyclerView = /*(RecyclerView)*/ v.findViewById(R.id.recycler);
