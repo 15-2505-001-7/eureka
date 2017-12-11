@@ -3,10 +3,15 @@ package com.example.v001ff.footmark;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import io.realm.Realm;
 
 import static com.example.v001ff.footmark.R.mipmap.sample;
@@ -29,7 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
-    Realm mRealm;
+    private Realm mRealm;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,46 +80,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 /*        ここから先はデータベースの処理です
           画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
+*/
+
+        if(AppLaunchChecker.hasStartedFromLauncher(this)){                              //2回目以降の起動はデモの格納はしない
+            Log.d("AppLaunchChecker","2回目以降");
+        } else {
+            Log.d("AppLaunchChecker","はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
+            Date date = new Date();
+            final String mDate = sdf.format(date);
+            Resources r1 = getResources();                                               //デモ用の画像を設定
+            Bitmap bmp1 = BitmapFactory.decodeResource(r1, R.drawable.demo1);
+            final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
+            Resources r2 = getResources();
+            Bitmap bmp2 = BitmapFactory.decodeResource(r2, R.drawable.demo2);
+            final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
-        final Date mDate = new Date();
-        ImageView photo1 = (ImageView) findViewById(R.drawable.demo1);            //デモ用の画像をここで設定してます.
-        Bitmap bmp1 = ((BitmapDrawable) photo1.getDrawable()).getBitmap();
-        final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
-        ImageView photo2 = (ImageView) findViewById(R.drawable.demo2);
-        Bitmap bmp2 = ((BitmapDrawable) photo1.getDrawable()).getBitmap();
-        final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
+            mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
+                @Override
+                public void execute(Realm realm){
+                    FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
+                    footmarkDataTable.setPlaceName("山口大学工学部");
+                    footmarkDataTable.setTitle("デモ用です");
+                    footmarkDataTable.setReviewBody("デモ用です");
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(bytes1);
+                    footmarkDataTable.setLatitude("33.9567058");
+                    footmarkDataTable.setLongitude("131.2727738");
 
-        mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
-            @Override
-            public void execute(Realm realm){
-                realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
-                footmarkDataTable.setPlaceName("山口大学工学部");
-                footmarkDataTable.setTitle("デモ用です");
-                footmarkDataTable.setReviewBody("デモ用です");
-                footmarkDataTable.setPlaceDate(mDate);
-                footmarkDataTable.setReviewDate(mDate);
-                footmarkDataTable.setPlaceImage(bytes1);
-                footmarkDataTable.setLatitude("33.9567058");
-                footmarkDataTable.setLongitude("131.2727738");
-                realm.commitTransaction();
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 1);
+                    footmarkDataTable.setPlaceName("フジグラン宇部");
+                    footmarkDataTable.setTitle("デモ用です");
+                    footmarkDataTable.setReviewBody("デモ用です");
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(bytes2);
+                    footmarkDataTable.setLatitude("33.9304745");
+                    footmarkDataTable.setLongitude("131.2556893");
+                }
+            });
+        }
 
-                realm.beginTransaction();
-                footmarkDataTable = realm.createObject(FootmarkDataTable.class, 1);
-                footmarkDataTable.setPlaceName("フジグラン宇部");
-                footmarkDataTable.setTitle("デモ用です");
-                footmarkDataTable.setReviewBody("デモ用です");
-                footmarkDataTable.setPlaceDate(mDate);
-                footmarkDataTable.setReviewDate(mDate);
-                footmarkDataTable.setPlaceImage(bytes2);
-                footmarkDataTable.setLatitude("33.9304745");
-                footmarkDataTable.setLongitude("131.2556893");
-                realm.commitTransaction();
-            }
-        });
+        AppLaunchChecker.onActivityCreate(this);
 
+/*
 
         ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
 
