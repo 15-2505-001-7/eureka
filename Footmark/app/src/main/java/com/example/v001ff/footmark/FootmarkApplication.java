@@ -17,5 +17,7 @@ public class FootmarkApplication extends Application {
         Realm.init(this);
         RealmConfiguration realmConfig = new RealmConfiguration.Builder().build();
         Realm.setDefaultConfiguration(realmConfig);
+
+
     }
 }

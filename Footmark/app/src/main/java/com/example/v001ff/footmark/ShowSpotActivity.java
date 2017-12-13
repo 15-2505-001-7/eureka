@@ -19,7 +19,7 @@ public class ShowSpotActivity extends AppCompatActivity
         implements PostListFragment.OnFragmentInteractionListener, View.OnClickListener {
 
     private Realm mRealm;
-    //private ListView mListView;
+    private int PID;                    //受け取ったPlaceIdをここに格納する
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +28,11 @@ public class ShowSpotActivity extends AppCompatActivity
 
         //リストビューにアダプタを設定
         mRealm = Realm.getDefaultInstance();
+
+        Intent intent = getIntent();                    //ここでMapsActivityのintentからPlaceIdを取り出す
+        if(intent != null){
+            PID = intent.getIntExtra("PlaceId",0);      //PIDにPlaceIdを格納する.データがないときは0が返る.
+        }
 
         /*
         mListView = (ListView) findViewById(R.id.listView);
@@ -80,11 +85,13 @@ public class ShowSpotActivity extends AppCompatActivity
         Fragment fragment = manager.findFragmentByTag("PostListFragment");
         if(fragment == null) {
             fragment = new PostListFragment();
+            Bundle args = new Bundle();                 //PostListFragmentにPlaceIdを渡すためにBundleを使う
+            args.putInt("PIDkey",PID);                  //BundleにPlaceIdをセット　ここまでは正常に動作
+            fragment.setArguments(args);                //PostListFragmentにPlaceIdを渡す
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.add(R.id.content, fragment, "PostListFragment");
             transaction.commit();
         }
-
     }
 
     @Override
@@ -97,6 +104,7 @@ public class ShowSpotActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(getApplication(), AddSpotActivity.class);
-        startActivity(intent);
+        intent.putExtra("PlaceId",PID);                     //intentにPlaceIdを格納して,AddSpotActivityに渡す.
+        startActivity(intent);                                  //ちなみにPlaceIdはAddSpotからShowSpotに戻ってくるときに使う
     }
 }

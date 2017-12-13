@@ -12,4 +12,5 @@
 
     <string name="action_settings">Settings</string>
     <string name="rationale">カメラを使用するには許可が必要です。</string>
+    <string name="title_activity_title">TitleActivity</string>
 </resources>
