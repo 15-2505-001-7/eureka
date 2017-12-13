@@ -106,6 +106,6 @@ public class ShowSpotActivity extends AppCompatActivity
     public void onClick(View view) {
         Intent intent = new Intent(getApplication(), AddSpotActivity.class);
         intent.putExtra("PlaceId",PID);                     //intentにPlaceIdを格納して,AddSpotActivityに渡す.
-        startActivity(intent);                                  //ちなみにPlaceIdはAddSpotからShowSpotに戻ってくるときに使う
+        startActivity(intent);                                //ちなみにPlaceIdはAddSpotからShowSpotに戻ってくるときに使う
     }
 }
