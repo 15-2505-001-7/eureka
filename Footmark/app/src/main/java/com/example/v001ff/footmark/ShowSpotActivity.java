@@ -26,6 +26,15 @@ public class ShowSpotActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_spot);
 
+        //スクロールビューの設定
+        /*
+        ScrollView scrollView = new ScrollView(this);
+        setContentView(scrollView);
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        scrollView.addView(linearLayout);
+        */
+
         //リストビューにアダプタを設定
         mRealm = Realm.getDefaultInstance();
 
@@ -54,7 +63,7 @@ public class ShowSpotActivity extends AppCompatActivity
         FootmarkDataTable footmarkdatatable = query.first();
         byte[] bytes = footmarkdatatable.getPlaceImage();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-        ((ImageView) findViewById(R.id.place_image)).setImageBitmap(bitmap);
+        ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap);
 
         //createTestData();
         showSpotList();
