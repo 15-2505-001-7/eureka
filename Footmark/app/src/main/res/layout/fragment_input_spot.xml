@@ -89,6 +89,6 @@
             android:layout_height="match_parent"
             android:layout_margin="16dp"
             android:scaleType="centerCrop"
-            app:srcCompat="@android:drawable/ic_menu_camera" />
+            app:srcCompat="@drawable/cameraicon" />
     </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>
