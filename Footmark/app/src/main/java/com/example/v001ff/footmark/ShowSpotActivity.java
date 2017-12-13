@@ -24,13 +24,13 @@ public class ShowSpotActivity extends AppCompatActivity
 
         mRealm = Realm.getDefaultInstance();
 
-        //createTestData();
-        showSpotList();
-
         Intent intent = getIntent();                    //ここでMapsActivityのintentからPlaceIdを取り出す
         if(intent != null){
             PID = intent.getIntExtra("PlaceId",0);      //PIDにPlaceIdを格納する.データがないときは0が返る.
         }
+
+        //createTestData();
+        showSpotList();
     }
 
     @Override
@@ -60,7 +60,7 @@ public class ShowSpotActivity extends AppCompatActivity
         if(fragment == null) {
             fragment = new PostListFragment();
             Bundle args = new Bundle();                 //PostListFragmentにPlaceIdを渡すためにBundleを使う
-            args.putInt("PIDkey",PID);                  //BundleにPlaceIdをセット
+            args.putInt("PIDkey",PID);                  //BundleにPlaceIdをセット　ここまでは正常に動作
             fragment.setArguments(args);                //PostListFragmentにPlaceIdを渡す
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.add(R.id.content, fragment, "PostListFragment");
@@ -78,6 +78,7 @@ public class ShowSpotActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(getApplication(), AddSpotActivity.class);
-        startActivity(intent);
+        intent.putExtra("PlaceId",PID);                     //intentにPlaceIdを格納して,AddSpotActivityに渡す.
+        startActivity(intent);                                //ちなみにPlaceIdはAddSpotからShowSpotに戻ってくるときに使う
     }
 }

@@ -109,8 +109,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void execute(Realm realm){
                     FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
                     footmarkDataTable.setPlaceName("山口大学工学部");
-                    footmarkDataTable.setTitle("デモ用です");
-                    footmarkDataTable.setReviewBody("デモ用です");
+                    footmarkDataTable.setTitle("山口大学工学部です");
+                    footmarkDataTable.setReviewBody("山口大学工学部です");
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(bytes1);
@@ -119,8 +119,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     footmarkDataTable = realm.createObject(FootmarkDataTable.class, 1);
                     footmarkDataTable.setPlaceName("フジグラン宇部");
-                    footmarkDataTable.setTitle("デモ用です");
-                    footmarkDataTable.setReviewBody("デモ用です");
+                    footmarkDataTable.setTitle("フジグラン宇部です");
+                    footmarkDataTable.setReviewBody("フジグラン宇部です");
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(bytes2);
@@ -249,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int mPlaceId = footmarkdatatable.getPlaceId();
         Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         //Intent intent = new Intent(this, ShowSpotActivity.class);
-        intent.putExtra("PlaceId",mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す
+        intent.putExtra("PlaceId",mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す."PlaceId"は受け渡し時のカギみたいなもの
         startActivity(intent);
     }
 
