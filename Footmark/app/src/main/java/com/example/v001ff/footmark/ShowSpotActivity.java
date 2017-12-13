@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import io.realm.Realm;
@@ -50,6 +51,7 @@ public class ShowSpotActivity extends AppCompatActivity
         PostingAdapter adapter = new PostingAdapter(footmarkDataTables);
         mListView.setAdapter(adapter);
         */
+
         /*
         Bitmap bitmap = BitmapFactory.decodeByteArray(getPlaceImage,0,getPlaceImage.length);
         */
@@ -59,11 +61,17 @@ public class ShowSpotActivity extends AppCompatActivity
 
         //データベースから画像の情報を取り出し、show_spot_activityに画像を表示
         //[課題]閲覧画面の画像がデモ画像のままなので追加投稿で画像を更新できるようにする!
+        //[課題]画像5枚を表示させるようにする
         RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
         FootmarkDataTable footmarkdatatable = query.first();
+        ((TextView) findViewById(R.id.spotname)).setText(footmarkdatatable.getPlaceName());//地名の表示
         byte[] bytes = footmarkdatatable.getPlaceImage();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-        ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap);
+        ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap);
+        ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap);
+        ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap);
+        ((ImageView) findViewById(R.id.place_image2)).setImageBitmap(bitmap);
+        ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap);//最新の画像を表示
 
         //createTestData();
         showSpotList();
