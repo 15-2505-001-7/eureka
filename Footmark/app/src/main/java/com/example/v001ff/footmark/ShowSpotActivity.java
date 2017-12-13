@@ -49,7 +49,8 @@ public class ShowSpotActivity extends AppCompatActivity
         //RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", "0").findAll();
 
         //データベースから画像の情報を取り出し、show_spot_activityに画像を表示
-        RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).findAll();
+        //[課題]閲覧画面の画像がデモ画像のままなので追加投稿で画像を更新できるようにする!
+        RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
         FootmarkDataTable footmarkdatatable = query.first();
         byte[] bytes = footmarkdatatable.getPlaceImage();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);

@@ -9,11 +9,11 @@ import io.realm.annotations.PrimaryKey;
 
 public class FootmarkDataTable extends RealmObject {
     @PrimaryKey
-    private int PlaceId;                     //投稿された場所を管理するためのID
+    public int PlaceId;                     //投稿された場所を管理するためのID private→public
     private long AccountId;                  //アカウントID
     public byte[] AccountImage;            //アカウント画像
     public String AccountName;              //アカウント名
-    private String PlaceName;                //投稿された場所の名前
+    public String PlaceName;                //投稿された場所の名前
     private String Latitude;                  //投稿された場所の緯度
     private String Longitude;                 //投稿された場所の経度
     public byte[] PlaceImage;              //投稿された場所のイメージ画像
