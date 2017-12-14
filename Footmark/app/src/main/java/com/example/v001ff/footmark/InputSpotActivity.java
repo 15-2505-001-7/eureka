@@ -2,6 +2,8 @@ package com.example.v001ff.footmark;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -52,7 +56,7 @@ public class InputSpotActivity extends AppCompatActivity {
         mAddReview = (EditText) findViewById(R.id.addReview);
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
-        spot_photo.setOnClickListener(new View.OnClickListener(){
+        spot_photo.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {                        //カメラ起動するための処理。試作。
 
                 int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
@@ -80,18 +84,19 @@ public class InputSpotActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK) {
 
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
-            capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage, 300, 469, false); //300×469にリサイズ
+            capturedImage1.compress(Bitmap.CompressFormat.PNG, 100, byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
 
+            /*
             String saveDir = Environment.getExternalStorageDirectory().getPath() + "/test";
             File file = new File(saveDir);
 
@@ -100,6 +105,7 @@ public class InputSpotActivity extends AppCompatActivity {
                     Log.e("Debug", "Make Dir Error");
                 }
             }
+            */
 
             // 画像保存パス
 
@@ -115,22 +121,27 @@ public class InputSpotActivity extends AppCompatActivity {
 
         try {
             //String date2 = df.format(date);
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //[課題]画像からの位置情報を取得
+
+            Log.e("!!!!!!","1実行できてます!");
+            ExifInterface exifInterface = new ExifInterface(saveBitmap(capturedImage));//p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //ExifInterface exifInterface = new ExifInterface(capturedImage.toString());
+            Log.e("!!!!!!","2実行できてます!");
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
             longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-        }
-        catch (Exception ex) {
+            Log.e("!!!!!!","3実行できてます!");
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         final String date2 = df.format(date);
-        mRealm.executeTransaction(new Realm.Transaction(){
+        mRealm.executeTransaction(new Realm.Transaction() {
             @Override
-            public void execute(Realm realm){
+            public void execute(Realm realm) {
                 Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 long nextId = 0;
-                if(maxId != null) nextId = maxId.longValue() + 1;
+                if (maxId != null) nextId = maxId.longValue() + 1;
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
@@ -154,6 +165,56 @@ public class InputSpotActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
+    }
+
+    public String saveBitmap(Bitmap saveImage) throws IOException {
+
+        final String SAVE_DIR = "/MyPhoto/";
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + SAVE_DIR);
+        try {
+            if (!file.exists()) {
+                file.mkdir();
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+
+        Date mDate = new Date();
+        SimpleDateFormat fileNameDate = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String fileName = fileNameDate.format(mDate) + ".jpg";
+        String AttachName = file.getAbsolutePath() + "/" + fileName;
+
+        try {
+            Log.e("!!!!!",fileName);
+            Log.e("!!!!!",AttachName);
+            FileOutputStream out = new FileOutputStream(AttachName);
+            Log.e("!!!!!","実行!!");
+            saveImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            Log.e("!!!!!","実行!!!");
+            out.flush();
+            Log.e("!!!!!","実行!!!!");
+            out.close();
+            Log.e("!!!!!","実行!!!!!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        Log.e("!!!","実行!!!");
+        // save index
+        ContentValues values = new ContentValues();
+        ContentResolver contentResolver = getContentResolver();
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        values.put(MediaStore.Images.Media.TITLE, fileName);
+        values.put("_data", AttachName);
+        contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+        System.out.println("!!!!!!!!!!!!!!!!!!fileName="+fileName);
+        System.out.println("!!!!!!!!!!!!!!!!!!AttachName="+AttachName);
+        Log.e("debug",fileName);//実行できてない
+        return fileName;
     }
 
 }

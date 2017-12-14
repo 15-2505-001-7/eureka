@@ -69,7 +69,7 @@ public class ShowSpotActivity extends AppCompatActivity
         byte[] bytes = footmarkdatatable.getPlaceImage();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
-        ((ImageView) findViewById(R.id.userphoto)).setImageBitmap(bitmap);//地名の表示
+        //((ImageView) findViewById(R.id.userphoto)).setImageBitmap(bitmap);//地名の表示
 
         ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap);
         ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap);

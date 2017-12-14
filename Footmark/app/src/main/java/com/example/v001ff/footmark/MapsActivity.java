@@ -132,18 +132,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         AppLaunchChecker.onActivityCreate(this);
 
-/*
 
-        ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
+        //ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
 
-
+        /*
         Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
         for(int i=0; i<maxPlace.intValue(); i++){
-            RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", "i").findAll();
+            RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
             FootmarkDataTable footmarkdatatable = query.first();
             String stringLatitude = footmarkdatatable.getLatitude();
-            double Latitude = Double.parseDouble(stringLatitude);                   //PlaceIdに対応する緯度の取得
+            double Latitude = Double.parseDouble(stringLatitude);                   //PlaceIdに対応する緯度の取得 //nullになっている
             String stringLongitude = footmarkdatatable.getLongitude();
             double Longitude = Double.parseDouble(stringLongitude);                 //PlaceIdに対応する経度の取得
             String mPlaceName = footmarkdatatable.getPlaceName();                   //PlaceIdに対応する場所の名前の取得
@@ -152,8 +151,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mPlaceName)
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
+        */
 
-*/
 
 
 
