@@ -122,6 +122,7 @@ public class AddSpotActivity extends AppCompatActivity {
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);
+                footmarkDataTable.setPlaceId(PID);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
                 //realm.commitTransaction();
