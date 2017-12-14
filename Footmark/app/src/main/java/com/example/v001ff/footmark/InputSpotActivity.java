@@ -80,7 +80,6 @@ public class InputSpotActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
 
-            //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
@@ -100,7 +99,7 @@ public class InputSpotActivity extends AppCompatActivity {
 
         try {
             //String date2 = df.format(date);
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -132,7 +131,7 @@ public class InputSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, ShowSpotActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override
