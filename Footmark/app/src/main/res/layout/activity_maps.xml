@@ -13,18 +13,13 @@
         map:cameraZoom="17.0"
         tools:context=".MapsActivity" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floatingActionButton"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_gravity="right|bottom"
-        android:clickable="true"
-        android:onClick="onClick"
-        map:backgroundTint="@color/colorAccent"
-        map:fabSize="normal"
-        map:rippleColor="@android:color/holo_green_light"
-        map:srcCompat="@android:drawable/ic_input_add" />
 
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onButton2Tapped"
+        android:text="Button" />
 
     <TextView
         android:id="@+id/textView2"
@@ -35,11 +30,13 @@
         android:textColor="#7d7d7e"
         android:textSize="50dp" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="onButton2Tapped"
-        android:text="Button" />
+    <ImageButton
+        android:id="@+id/imageButton"
+        android:layout_width="90dp"
+        android:layout_height="100dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="45dp"
+        android:background="@drawable/asiwhite1111"
+        android:onClick="onClick" />
 
 </FrameLayout>

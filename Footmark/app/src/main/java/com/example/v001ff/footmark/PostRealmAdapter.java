@@ -74,4 +74,5 @@ public class PostRealmAdapter extends RealmRecyclerViewAdapter<FootmarkDataTable
             holder.AccountImage.setImageBitmap(bmp);
         }
     }
+
 }
