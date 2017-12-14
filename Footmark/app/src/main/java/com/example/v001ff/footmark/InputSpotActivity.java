@@ -7,17 +7,20 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,6 +91,18 @@ public class InputSpotActivity extends AppCompatActivity {
             capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
+
+            String saveDir = Environment.getExternalStorageDirectory().getPath() + "/test";
+            File file = new File(saveDir);
+
+            if (!file.exists()) {
+                if (!file.mkdir()) {
+                    Log.e("Debug", "Make Dir Error");
+                }
+            }
+
+            // 画像保存パス
+
         }
     }
 
@@ -132,7 +147,7 @@ public class InputSpotActivity extends AppCompatActivity {
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, ShowSpotActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override

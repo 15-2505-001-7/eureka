@@ -65,8 +65,12 @@ public class ShowSpotActivity extends AppCompatActivity
         RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
         FootmarkDataTable footmarkdatatable = query.first();
         ((TextView) findViewById(R.id.spotname)).setText(footmarkdatatable.getPlaceName());//地名の表示
+
         byte[] bytes = footmarkdatatable.getPlaceImage();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+
+        ((ImageView) findViewById(R.id.userphoto)).setImageBitmap(bitmap);//地名の表示
+
         ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap);
         ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap);
         ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap);
