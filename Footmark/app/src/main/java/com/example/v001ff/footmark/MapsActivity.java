@@ -286,7 +286,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Date date = new Date();
             final String mDate = sdf.format(date);
             Resources r1 = getResources();                                               //デモ用の画像を設定
-            Bitmap bmp1 = BitmapFactory.decodeResource(r1, R.drawable.demo1);
+            Bitmap bmp1 = BitmapFactory.decodeResource(r1, R.drawable.demo0);
             final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
             Resources r2 = getResources();
             Bitmap bmp2 = BitmapFactory.decodeResource(r2, R.drawable.demo2);
