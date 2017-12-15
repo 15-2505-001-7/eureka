@@ -2,13 +2,14 @@ package com.example.v001ff.footmark;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,18 +19,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
-
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
 
-public class InputSpotActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class InputSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
@@ -40,7 +37,8 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     String longitudeRef;                                         //画像から取得する経度
     String longitude;
     Bitmap capturedImage;
-    private GoogleApiClient mGoogleApiClient = null;
+    Uri mSaveUri;                                       //画像を保存するために使用するUri.Uriは住所みたいなもの.URLの親戚
+    String filename;                                    //画像のファイル名をここに保存する.
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
@@ -74,7 +72,13 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     // パーミッションが必要な処理。以下でカメラ起動。
                     Intent intent = new Intent();
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);
+                    filename = System.currentTimeMillis() + ".jpg";
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, filename);
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+                    startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
 
                 }
             }
@@ -85,14 +89,27 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
-
-            //capturedImage = (Bitmap) data.getExtras().get("data");
+            if(data!=null){
+                Uri uri = null;
+                uri = data.getData();
+                try{
+                    capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),uri);
+                }catch(IOException e){
+                        e.printStackTrace();
+                }
+            }
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-            capturedImage = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
-            capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
-            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
+
+           /* String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
+            File imagefile = new File(path);                     //画像ファイルをfileに格納
+            if(BitmapFactory.decodeFile(path) == null) System.out.println("imagefileの中身ないやんけ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            capturedImage = BitmapFactory.decodeFile(path);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
+            */
+            //capturedImage = (Bitmap) data.getExtras().get("data");
+            //ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            //Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
+            //capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
         }
     }
@@ -106,7 +123,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
 
         try {
             //String date2 = df.format(date);
-            ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            ExifInterface exifInterface = new ExifInterface(filename);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -135,23 +152,10 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 //realm.commitTransaction();
             }
         });
-
-        //位置情報やってます
-        if(mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-
-        }
-        if(mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, ShowSpotActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override
@@ -160,19 +164,4 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
     }
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 }

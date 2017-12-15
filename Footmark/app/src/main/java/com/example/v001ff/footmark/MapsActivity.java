@@ -212,6 +212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         updateUI();*/
     }
 
+
     protected void startIntentService() {
         Intent intent = new Intent(this, FetchAddressIntentService.class);
         intent.putExtra(Constants.RECEIVER, mResultReceiver);
@@ -442,7 +443,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //位置情報やってんの！！！！
-    protected void createLocationRequest() {
+ protected void createLocationRequest() {
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
