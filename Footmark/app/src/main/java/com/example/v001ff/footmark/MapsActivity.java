@@ -76,6 +76,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected Location mLastLocation;
     private AddressResultReceiver mResultReceiver;
     long counter = 0;
+    public double x;
+    public double y;
     //private RequestingLocationUpdates mRequestingLocationUpdates;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;
             }
             manager.requestLocationUpdates
-                    (LocationManager.GPS_PROVIDER, 100, 10, this);
+                    (LocationManager.GPS_PROVIDER, 10, 10, this);
         }
         super.onResume();
     }
@@ -172,6 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
+        if(counter<3) {
             String str = "緯度 : " + location.getLatitude();
             System.out.println("いどおおおおおおおおおおおおお" + str);
             //latitude.setText(str);
@@ -181,12 +184,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             str = "高度 : " + location.getAltitude();
             System.out.println("こうどおおおおおおおおおおおお" + str);
             //altitude.setText(str);
-            double x = location.getLatitude();
-            double y = location.getLongitude();
+            x = location.getLatitude();
+            y = location.getLongitude();
             LatLng z = new LatLng(x, y);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(z));
-
-        counter += 1;
+            counter += 1;
+        }
     }
 
     @Override
@@ -385,6 +388,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onClick(View v) {
         Intent intent = new Intent(getApplication(), InputSpotActivity.class);
+        String xstring = Double.toString(x);
+        String ystring = Double.toString(y);
+        intent.putExtra("ido",xstring);
+        intent.putExtra("keido",ystring);
         startActivity(intent);
     }
 

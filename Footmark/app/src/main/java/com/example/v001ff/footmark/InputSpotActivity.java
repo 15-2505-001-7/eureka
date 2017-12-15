@@ -43,6 +43,10 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     private GoogleApiClient mGoogleApiClient = null;
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
+    //緯度・経度を入れる
+    public String ido;
+    public String keido;
+
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
     @Override
@@ -79,6 +83,13 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 }
             }
         });
+
+        //値の受け取り
+        Intent intent = getIntent();
+        ido = intent.getStringExtra("ido");
+        keido = intent.getStringExtra("keido");
+        System.out.println("inputspotactivityですお　->  緯度" + ido);
+        System.out.println("inputspotactivityですお  ->  経度" + keido);
     }
 
 
@@ -108,9 +119,11 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //String date2 = df.format(date);
             ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
-            latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            //latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            latitude = ido;
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            longitude = keido;
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -151,7 +164,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, ShowSpotActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
     }
 
     @Override
