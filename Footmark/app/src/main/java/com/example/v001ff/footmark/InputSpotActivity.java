@@ -4,12 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -128,6 +128,7 @@ public class InputSpotActivity extends AppCompatActivity {
             //ExifInterface exifInterface = new ExifInterface(capturedImage.toString());
             Log.e("!!!!!!","2実行できてます!");
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
+
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
             longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
@@ -170,10 +171,19 @@ public class InputSpotActivity extends AppCompatActivity {
     public String saveBitmap(Bitmap saveImage) throws IOException {
 
         final String SAVE_DIR = "/MyPhoto/";
-        File file = new File(Environment.getExternalStorageDirectory().getPath() + SAVE_DIR);
+        //File file = new File("/storage/sdcard/Android/data/MyPhoto");
+       // File file = new File(Environment.getExternalStorageDirectory().getPath() + SAVE_DIR);
+        final File topDir = getDir("MyApp_folder", Context.MODE_PRIVATE);
+        File file = new File(topDir, "sub_dir");
+
         try {
             if (!file.exists()) {
-                file.mkdir();
+                if (file.mkdirs()){
+                    Log.e("成功!","ディレクトリの作成に成功しました");
+                }else{
+                    Log.e("失敗!","ディレクトリの作成に失敗しました");
+                }
+
             }
         } catch (SecurityException e) {
             e.printStackTrace();
@@ -187,34 +197,30 @@ public class InputSpotActivity extends AppCompatActivity {
         String AttachName = file.getAbsolutePath() + "/" + fileName;
 
         try {
-            Log.e("!!!!!",fileName);
-            Log.e("!!!!!",AttachName);
-            FileOutputStream out = new FileOutputStream(AttachName);
-            Log.e("!!!!!","実行!!");
+            Log.e("fileName",fileName);
+            Log.e("AttachName",AttachName);
+            Log.e("file",file.toString());
+            FileOutputStream out = new FileOutputStream(AttachName);//ここが実行できてない
             saveImage.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            Log.e("!!!!!","実行!!!");
             out.flush();
-            Log.e("!!!!!","実行!!!!");
             out.close();
-            Log.e("!!!!!","実行!!!!!");
         } catch (IOException e) {
             e.printStackTrace();
             throw e;
         }
 
-        Log.e("!!!","実行!!!");
+        Log.e("!!!","実行!!!");//ここまでok
         // save index
         ContentValues values = new ContentValues();
         ContentResolver contentResolver = getContentResolver();
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         values.put(MediaStore.Images.Media.TITLE, fileName);
         values.put("_data", AttachName);
-        contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        Log.e("InputSpotActivity","ここまでok!!!!!");
+        contentResolver.insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);//ここができたら完成
 
-        System.out.println("!!!!!!!!!!!!!!!!!!fileName="+fileName);
-        System.out.println("!!!!!!!!!!!!!!!!!!AttachName="+AttachName);
-        Log.e("debug",fileName);//実行できてない
-        return fileName;
+        Log.e("InputSpotActivity","完成!");
+        return AttachName;
     }
 
 }

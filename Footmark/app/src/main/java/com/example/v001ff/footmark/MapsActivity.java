@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -78,10 +79,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng yu = new LatLng(33.9567058, 131.2727738);
         LatLng zu = new LatLng(33.9304745,  131.2556893);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
-                .icon(BitmapDescriptorFactory.fromResource(sample)));
-        mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
-                .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
         mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
@@ -135,23 +132,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
 
-        /*
+
         Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
-        for(int i=0; i<maxPlace.intValue(); i++){
+        for(int i=0; i<=maxPlace.intValue(); i++){
+            Log.e("MapsActivity","ピン打ち"+(i+1)+"回目");
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
             FootmarkDataTable footmarkdatatable = query.first();
-            String stringLatitude = footmarkdatatable.getLatitude();
-            double Latitude = Double.parseDouble(stringLatitude);                   //PlaceIdに対応する緯度の取得 //nullになっている
+            String stringLatitude = footmarkdatatable.getLatitude(); //nullになっている
+            Log.e("緯度!!",stringLatitude);
+            double Latitude = Double.parseDouble(stringLatitude);//PlaceIdに対応する緯度の取得 //nullのまま
+            Log.e("","緯度:"+Latitude);
             String stringLongitude = footmarkdatatable.getLongitude();
-            double Longitude = Double.parseDouble(stringLongitude);                 //PlaceIdに対応する経度の取得
+            double Longitude = Double.parseDouble(stringLongitude);//PlaceIdに対応する経度の取得
+            Log.e("","経度:"+Longitude);
+
             String mPlaceName = footmarkdatatable.getPlaceName();                   //PlaceIdに対応する場所の名前の取得
 
             latlng.add(new LatLng(Latitude,Longitude));                             //緯度経度を渡してlatlngクラス作成
             mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mPlaceName)
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
-        */
+
 
 
 
