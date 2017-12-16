@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -56,7 +57,7 @@ public class InputSpotActivity extends AppCompatActivity {
         mAddReview = (EditText) findViewById(R.id.addReview);
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
-        spot_photo.setOnClickListener(new View.OnClickListener() {
+        spot_photo.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {                        //カメラ起動するための処理。試作。
 
                 int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
@@ -84,31 +85,17 @@ public class InputSpotActivity extends AppCompatActivity {
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
 
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage, 300, 469, false); //300×469にリサイズ
-            capturedImage1.compress(Bitmap.CompressFormat.PNG, 100, byteArrayStream);
+            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
+            capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage1);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
-
-            /*
-            String saveDir = Environment.getExternalStorageDirectory().getPath() + "/test";
-            File file = new File(saveDir);
-
-            if (!file.exists()) {
-                if (!file.mkdir()) {
-                    Log.e("Debug", "Make Dir Error");
-                }
-            }
-            */
-
-            // 画像保存パス
-
         }
     }
 
@@ -118,48 +105,66 @@ public class InputSpotActivity extends AppCompatActivity {
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         //String dateParse = new String();
         final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+/*
+        FileOutputStream out = null;
+        try {
+            // openFileOutputはContextのメソッドなのでActivity内ならばthisでOK
+            out = this.openFileOutput("image.png", Context.MODE_PRIVATE);
+            image.compress(Bitmap.CompressFormat.PNG, 100, out);
+        } catch (FileNotFoundException e) {
+            // エラー処理
+        } finally {
+            if (out != null) {
+                out.close();
+                out = null;
+            }
+        }
+        */
 
         try {
             //String date2 = df.format(date);
             //[課題]画像からの位置情報を取得
-
-            Log.e("!!!!!!","1実行できてます!");
-            ExifInterface exifInterface = new ExifInterface(saveBitmap(capturedImage));//p283にRealmでの画像の扱い方書いてるので参照して修正予定
-            //ExifInterface exifInterface = new ExifInterface(capturedImage.toString());
-            Log.e("!!!!!!","2実行できてます!");
+            String filename = saveBitmap(capturedImage);
+            Log.e("filenameの中身は",filename);
+            ExifInterface exifInterface = new ExifInterface(filename);//p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            Log.e("","Exifinterface");
+            //これ以降がうまくいかない
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
-
             latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
             longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            Log.e("!!!!!!","3実行できてます!");
+
         } catch (Exception ex) {
             ex.printStackTrace();
+        }finally {
+
         }
         final String date2 = df.format(date);
-        mRealm.executeTransaction(new Realm.Transaction() {
+        mRealm.executeTransaction(new Realm.Transaction(){
             @Override
-            public void execute(Realm realm) {
+            public void execute(Realm realm){
                 Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 long nextId = 0;
-                if (maxId != null) nextId = maxId.longValue() + 1;
-                //realm.beginTransaction();
+                if(maxId != null) nextId = maxId.longValue() + 1;
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setPlaceDate(date);
+                Log.e("","日付ok");
                 footmarkDataTable.setPlaceImage(bytes);
+                Log.e("","画像取得ok");
                 footmarkDataTable.setLatitude(latitude);
+                Log.e("画像の緯度","");
                 footmarkDataTable.setLongitude(longitude);
-
-                //realm.commitTransaction();
+                Log.e("画像の経度","");
             }
         });
+
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
+        startActivity(new Intent(InputSpotActivity.this, ShowSpotActivity.class));
     }
 
     @Override
@@ -172,13 +177,13 @@ public class InputSpotActivity extends AppCompatActivity {
 
         final String SAVE_DIR = "/MyPhoto/";
         //File file = new File("/storage/sdcard/Android/data/MyPhoto");
-       // File file = new File(Environment.getExternalStorageDirectory().getPath() + SAVE_DIR);
+        File file = new File(Environment.getExternalStorageDirectory().getPath() + SAVE_DIR);
         final File topDir = getDir("MyApp_folder", Context.MODE_PRIVATE);
-        File file = new File(topDir, "sub_dir");
+        //File file = new File(topDir, "sub_dir");
 
         try {
             if (!file.exists()) {
-                if (file.mkdirs()){
+                if (file.mkdir()){
                     Log.e("成功!","ディレクトリの作成に成功しました");
                 }else{
                     Log.e("失敗!","ディレクトリの作成に失敗しました");

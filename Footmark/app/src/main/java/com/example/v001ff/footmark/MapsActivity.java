@@ -35,7 +35,8 @@ import io.realm.RealmResults;
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener,
+        GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
@@ -46,14 +47,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             Thread.sleep(2000);
-        }catch(InterruptedException e) {
+        } catch (InterruptedException e) {
         }
         setTheme(R.style.AppTheme);//splash表示する
 
         //対応検討中(も)
-        //InputSpotFragment fragment = new InputSpotFragment();
-        //getFragmentManager().beginTransaction().add
-        //        (android.R.id.content, fragment, "InputSpotFragment").commit();
+        //latitude = (TextView) findViewById(R.id.latitude_id);
+        //longitude = (TextView) findViewById(R.id.longitude_id);
+        //altitude = (TextView) findViewById(R.id.altitude_id);
 
         setContentView(R.layout.activity_maps);
         if (Build.VERSION.SDK_INT >= 23)
@@ -61,9 +62,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else
             start();
 
-        mRealm = Realm.getDefaultInstance();                  //データベース使用する準備
-    }
+        mRealm = Realm.getDefaultInstance();//データベース使用する準備
 
+    }
 
     public void start() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -77,19 +78,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng yu = new LatLng(33.9567058, 131.2727738);
-        LatLng zu = new LatLng(33.9304745,  131.2556893);
+        LatLng zu = new LatLng(33.9304745, 131.2556893);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
-        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
+        mMap.setOnInfoWindowClickListener(this);                                //InfoWindowがタップされたときの処理
 
 /*        ここから先はデータベースの処理です
           画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
 */
 
-        if(AppLaunchChecker.hasStartedFromLauncher(this)){                              //2回目以降の起動はデモの格納はしない
-            Log.d("AppLaunchChecker","2回目以降");
+        if (AppLaunchChecker.hasStartedFromLauncher(this)) {                              //2回目以降の起動はデモの格納はしない
+            Log.d("AppLaunchChecker", "2回目以降");
         } else {
-            Log.d("AppLaunchChecker","はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
+            Log.d("AppLaunchChecker", "はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
             Date date = new Date();
             final String mDate = sdf.format(date);
@@ -101,9 +102,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
 
 
-            mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
+            mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
-                public void execute(Realm realm){
+                public void execute(Realm realm) {
                     FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
                     footmarkDataTable.setPlaceName("山口大学工学部");
                     footmarkDataTable.setTitle("山口大学工学部です");
@@ -135,27 +136,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
-        for(int i=0; i<=maxPlace.intValue(); i++){
-            Log.e("MapsActivity","ピン打ち"+(i+1)+"回目");
+        for (int i = 0; i <= maxPlace.intValue(); i++) {
+            Log.e("MapsActivity", "ピン打ち" + (i + 1) + "回目");
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
             FootmarkDataTable footmarkdatatable = query.first();
             String stringLatitude = footmarkdatatable.getLatitude(); //nullになっている
-            Log.e("緯度!!",stringLatitude);
+            //Log.e("緯度!!", stringLatitude);
             double Latitude = Double.parseDouble(stringLatitude);//PlaceIdに対応する緯度の取得 //nullのまま
-            Log.e("","緯度:"+Latitude);
             String stringLongitude = footmarkdatatable.getLongitude();
             double Longitude = Double.parseDouble(stringLongitude);//PlaceIdに対応する経度の取得
-            Log.e("","経度:"+Longitude);
 
             String mPlaceName = footmarkdatatable.getPlaceName();                   //PlaceIdに対応する場所の名前の取得
 
-            latlng.add(new LatLng(Latitude,Longitude));                             //緯度経度を渡してlatlngクラス作成
-            mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mPlaceName)
+
+            latlng.add(new LatLng(Latitude, Longitude));                             //緯度経度を渡してlatlngクラス作成
+            //System.out.print(latlng.get(i));
+            LatLng u = new LatLng(Latitude, Longitude);
+            mMap.addMarker(new MarkerOptions().position(u).title(mPlaceName)
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
-
-
-
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -237,8 +236,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return super.onOptionsItemSelected(item);
     }
 
-    public void onButton2Tapped(View view){                     //実験場への道
-        Intent intent = new Intent(this,MainActivity.class);
+    public void onButton2Tapped(View view) {                     //実験場への道
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -250,11 +249,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int mPlaceId = footmarkdatatable.getPlaceId();
         Intent intent = new Intent(getApplication(), ShowSpotActivity.class);
         //Intent intent = new Intent(this, ShowSpotActivity.class);
-        intent.putExtra("PlaceId",mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す."PlaceId"は受け渡し時のカギみたいなもの
+        intent.putExtra("PlaceId", mPlaceId);                //intentにPlaceIdを格納して,ShowSpotActivityに渡す."PlaceId"は受け渡し時のカギみたいなもの
         startActivity(intent);
     }
 
-
 }
-
-//
