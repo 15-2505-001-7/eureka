@@ -68,6 +68,28 @@
                 android:scaleType="centerCrop"
                 app:srcCompat="@mipmap/asi"
                 android:layout_marginRight="20dp"/>
+
+            <ImageView
+                android:id="@+id/place_image6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/asitop111" />
+
+            <ImageView
+                android:id="@+id/place_image7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/asitop111" />
+
+            <ImageView
+                android:id="@+id/place_image8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/asitop111" />
+
         </LinearLayout>
     </HorizontalScrollView>
 

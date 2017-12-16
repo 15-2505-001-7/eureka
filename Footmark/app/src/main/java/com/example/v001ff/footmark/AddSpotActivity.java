@@ -22,6 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class AddSpotActivity extends AppCompatActivity {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
@@ -56,7 +57,7 @@ public class AddSpotActivity extends AppCompatActivity {
 
         ImageView spot_photo = (ImageView) findViewById(R.id.spot_photo);
         spot_photo.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View view) {                        //カメラ起動するための処理。試作。
+            public void onClick(View view) {                        //カメラ起動するための処理。
 
                 int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
 
@@ -86,7 +87,7 @@ public class AddSpotActivity extends AppCompatActivity {
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-            Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+            capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
@@ -96,7 +97,7 @@ public class AddSpotActivity extends AppCompatActivity {
     public void onPostingButtonTapped(View view) {
         final Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        //byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
         /*
         try {
             dateParse = sdf.parse(mDate.getText().toString());
@@ -115,13 +116,19 @@ public class AddSpotActivity extends AppCompatActivity {
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-                Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                long nextId = 0;
-                if(maxId != null) nextId = maxId.longValue() + 1;
+                Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");                        //最大の投稿数を取得する
+                long nextPostNum = 0;
+                if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
+                RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
+                Number maxPlaceNum = query.max("PlaceNum");                                                              //最大の場所ごとの投稿数を取得する
+                int nextPlaceNum = 0;
+                if(maxPlaceNum != null) nextPlaceNum = maxPlaceNum.intValue() + 1;
                 //realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
+                footmarkDataTable.setPlaceNum(nextPlaceNum);
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);
+                footmarkDataTable.setPlaceImage(bytes);
                 footmarkDataTable.setPlaceId(PID);
                 //footmarkDataTable.setLatitude(latitude);
                 //footmarkDataTable.setLongitude(longitude);
