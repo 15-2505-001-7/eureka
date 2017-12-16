@@ -223,8 +223,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Number maxPlaceId = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         System.out.println("maxPlaceIdは" + maxPlaceId + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
-        for (int i = 0; i <= maxPlace.intValue(); i++) {
-            Log.e("MapsActivity", "ピン打ち" + (i + 1) + "回目");
         for (int i = 0; i <= maxPlaceId.intValue(); i++) {
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
             FootmarkDataTable footmarkdatatable = query.first();
