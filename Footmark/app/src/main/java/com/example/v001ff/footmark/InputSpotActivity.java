@@ -26,7 +26,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -98,7 +97,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             }
         });
 
-        //値の受け取り
+        //緯度と経度の受け取り    値はMapsActivityからやってくる　つまり画面遷移時の緯度経度の情報を投稿に使ってる
         Intent intent = getIntent();
         ido = intent.getStringExtra("ido");
         keido = intent.getStringExtra("keido");
@@ -160,11 +159,15 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-                Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                long nextId = 0;
-                if(maxId != null) nextId = maxId.longValue() + 1;
+                Number maxPlaceId = realm.where(FootmarkDataTable.class).max("PlaceId");
+                long nextPlaceId = 0;
+                if(maxPlaceId != null) nextPlaceId = maxPlaceId.longValue() + 1;                //PlaceIdを連番で管理
+                Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");
+                long nextPostNum = 0;
+                if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
                 //realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
+                footmarkDataTable.setPlaceNum(0);
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);

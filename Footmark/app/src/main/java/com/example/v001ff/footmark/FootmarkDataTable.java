@@ -9,6 +9,8 @@ import io.realm.annotations.PrimaryKey;
 
 public class FootmarkDataTable extends RealmObject {
     @PrimaryKey
+    private long PostNum;                    //投稿数をプライマリーキーに設定
+    private int PlaceNum;                   //場所ごとの投稿数.画像の表示のときに使用する予定
     public int PlaceId;                     //投稿された場所を管理するためのID private→public
     private long AccountId;                  //アカウントID
     public byte[] AccountImage;            //アカウント画像
@@ -25,6 +27,14 @@ public class FootmarkDataTable extends RealmObject {
     private String MyLatitude;                //ユーザー自身が投稿した場所の緯度
     private String MyLongitude;               //ユーザー自身が投稿した場所の経度
 
+
+    public long getPostNum() {              //引数を受け取るゲッター
+        return PostNum;
+    }
+
+    public int getPlaceNum() {              //引数を受け取るゲッター
+        return PlaceNum;
+    }
 
     public long getAccountId() {              //引数を受け取るゲッター
         return AccountId;
@@ -84,6 +94,10 @@ public class FootmarkDataTable extends RealmObject {
         return MyLongitude;
     }
 
+
+    public void setPostNum(long postNum) {PostNum = postNum;}
+
+    public void setPlaceNum(int placeNum) {PlaceNum = placeNum;}
 
     public void setAccountId(long accountId) {
         AccountId = accountId;

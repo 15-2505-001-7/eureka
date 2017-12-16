@@ -1,22 +1,15 @@
 package com.example.v001ff.footmark;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.AppLaunchChecker;
 import android.support.v4.app.FragmentActivity;
@@ -25,19 +18,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -49,6 +36,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -56,48 +44,30 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
+import static android.R.attr.x;
+import static android.R.attr.y;
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener,
-        GoogleMap.OnInfoWindowClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-        , LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
     private Realm mRealm;
-    //位置情報用
-    private LocationManager manager = null;
-    private TextView latitude;
-    private TextView longitude;
-    private TextView altitude;
-    private FusedLocationProviderClient mFusedLocationClient;
-    private LocationCallback mLocationCallback;
-    protected Location mLastLocation;
-    private AddressResultReceiver mResultReceiver;
-    long counter = 0;
-    public double x;
-    public double y;
-    public LatLng z;
-    //private RequestingLocationUpdates mRequestingLocationUpdates;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        updateValuesFromBundle(savedInstanceState);
 
         try {
             Thread.sleep(2000);
-        } catch (InterruptedException e) {
+        }catch(InterruptedException e) {
         }
         setTheme(R.style.AppTheme);//splash表示する
 
         //対応検討中(も)
-        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationProvider provider =
-                manager.getProvider(manager.GPS_PROVIDER);
-        //latitude = (TextView) findViewById(R.id.latitude_id);
-        //longitude = (TextView) findViewById(R.id.longitude_id);
-        //altitude = (TextView) findViewById(R.id.altitude_id);
+        //InputSpotFragment fragment = new InputSpotFragment();
+        //getFragmentManager().beginTransaction().add
+        //        (android.R.id.content, fragment, "InputSpotFragment").commit();
 
         setContentView(R.layout.activity_maps);
         if (Build.VERSION.SDK_INT >= 23)
@@ -105,158 +75,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         else
             start();
 
-        mRealm = Realm.getDefaultInstance();//データベース使用する準備
-
-        /*mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        mFusedLocationClient.getLastLocation().addOnSuccessListener(this, new OnSuccessListener<Location>() {
-            @Override
-            public void onSuccess(Location location) {
-                //Got last known location In some rare situations this can be null.
-                if (location != null) {
-                    //Logic to handle location object
-                }
-            }
-        });
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                for (Location location : locationResult.getLocations()) {
-                    //Update UI with location data
-                    // ...
-                }
-            }
-
-            ;
-        };*/
+        mRealm = Realm.getDefaultInstance();                  //データベース使用する準備
     }
 
-    @Override
-    protected void onPause() {
-        if (manager != null) {
-            manager.removeUpdates(this);
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume() {
-        if (manager != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
-                return;
-            }
-            manager.requestLocationUpdates
-                    (LocationManager.GPS_PROVIDER, 100, 10, this);
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        final boolean gpsEnabled = manager.isProviderEnabled(
-                LocationManager.GPS_PROVIDER
-        );
-        if(!gpsEnabled) {
-            enableLocationSettings();
-        }
-    }
-
-    private void enableLocationSettings() {
-        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        startActivity(settingsIntent);
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        if(counter<3) {
-            String str = "緯度 : " + location.getLatitude();
-            System.out.println("いどおおおおおおおおおおおおお" + str);
-            //latitude.setText(str);
-            str = "経度 : " + location.getLongitude();
-            System.out.println("けいどおおおおおおおおおおおお" + str);
-            //longitude.setText(str);
-            str = "高度 : " + location.getAltitude();
-            System.out.println("こうどおおおおおおおおおおおお" + str);
-            //altitude.setText(str);
-            x = location.getLatitude();
-            y = location.getLongitude();
-            z = new LatLng(x, y);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(z));
-            counter += 1;
-        }
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider){
-
-    }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    private void updateValuesFromBundle(Bundle savedInstanceState) {
-        //Update the value of mRequestingLocationUpdates from the Bundle.
-        /*if (savedInstanceState.keySet().contains(REQUESTING_LOCATION_UPDATES_KEY)) {
-            mRequestingLocationUpdates = savedInstanceState.getBoolean(
-                    REQUESTING_LOCATION_UPDATES_KEY);
-        }
-        updateUI();*/
-    }
-
-
-    protected void startIntentService() {
-        Intent intent = new Intent(this, FetchAddressIntentService.class);
-        intent.putExtra(Constants.RECEIVER, mResultReceiver);
-        intent.putExtra(Constants.LOCATTION_DATA_EXTRA, mLastLocation);
-        startService(intent);
-    }
-
-    private void fetchAddressButtonHander(View view) {
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        mLastLocation = location;
-
-                        if (mLastKnownLocation == null) {
-                            return;
-                        }
-
-                        if (!Geocoder.isPresent()) {
-                            Toast.makeText(MapsActivity.this,
-                                    R.string.no_geocoder_available,
-                                    Toast.LENGTH_LONG).show();
-                            return;
-                        }
-                        startIntentService();
-                        updateUI();
-                    }
-                });
-    }*/
-}
 
     public void start() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -270,39 +91,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng yu = new LatLng(33.9567058, 131.2727738);
-        LatLng zu = new LatLng(33.9304745, 131.2556893);
+        LatLng zu = new LatLng(33.9304745,  131.2556893);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        manager.requestLocationUpdates
-                (LocationManager.GPS_PROVIDER, 10, 10, this);
+/*        mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
         /*mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
-                .icon(BitmapDescriptorFactory.fromResource(sample)));*/
+                .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
-        mMap.setOnInfoWindowClickListener(this);                                //InfoWindowがタップされたときの処理
+        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
 /*        ここから先はデータベースの処理です
           画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
 */
 
-        if (AppLaunchChecker.hasStartedFromLauncher(this)) {                              //2回目以降の起動はデモの格納はしない
-            Log.d("AppLaunchChecker", "2回目以降");
+        if(AppLaunchChecker.hasStartedFromLauncher(this)){                              //2回目以降の起動はデモの格納はしない
+            Log.d("AppLaunchChecker","2回目以降");
         } else {
-            Log.d("AppLaunchChecker", "はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
+            Log.d("AppLaunchChecker","はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
+            DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
             Date date = new Date();
             final String mDate = sdf.format(date);
             Resources r1 = getResources();                                               //デモ用の画像を設定
-            Bitmap bmp1 = BitmapFactory.decodeResource(r1, R.drawable.demo0);
+            Bitmap bmp1 = BitmapFactory.decodeResource(r1, R.drawable.demo1);
             final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
             Resources r2 = getResources();
             Bitmap bmp2 = BitmapFactory.decodeResource(r2, R.drawable.demo2);
             final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
 
 
-            mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
+            mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
-                public void execute(Realm realm) {
+                public void execute(Realm realm){
                     FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
                     footmarkDataTable.setPlaceName("山口大学工学部");
                     footmarkDataTable.setTitle("山口大学工学部です");
@@ -328,13 +148,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         AppLaunchChecker.onActivityCreate(this);
 
+//        ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
 
-        //ここはデータベースにアクセスして,すべてのPlaceIdに対応する緯度経度を取得してグーグルマップにマーカーを設置します
 
-
-        Number maxPlace = mRealm.where(FootmarkDataTable.class).max("PlaceId");
+        Number maxPlaceId = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
-        for (int i = 0; i <= maxPlace.intValue(); i++) {
+        for(int i=0; i<=maxPlaceId.intValue(); i++){
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
             FootmarkDataTable footmarkdatatable = query.first();
             String stringLatitude = footmarkdatatable.getLatitude();
@@ -343,13 +162,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double Longitude = Double.parseDouble(stringLongitude);                 //PlaceIdに対応する経度の取得
             String mPlaceName = footmarkdatatable.getPlaceName();                   //PlaceIdに対応する場所の名前の取得
 
-
-            latlng.add(new LatLng(Latitude, Longitude));                             //緯度経度を渡してlatlngクラス作成
-            System.out.print(latlng.get(i));
-            LatLng u = new LatLng(Latitude, Longitude);
-            mMap.addMarker(new MarkerOptions().position(u).title(mPlaceName)
+            latlng.add(new LatLng(Latitude,Longitude));                             //緯度経度を渡してlatlngクラス作成
+            mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mPlaceName)
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
+
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -523,10 +340,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         stopLocationUpdates();
     }*/
 
-    private void stopLocationUpdates() {
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback);
-    }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         /*outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,
@@ -580,21 +393,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             addressFragment));
         }
     }*/
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
 
     final class Constants {
         public static final int SUCCESS_RESULT = 0;
