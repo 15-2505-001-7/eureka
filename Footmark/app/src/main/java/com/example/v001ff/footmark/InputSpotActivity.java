@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -21,6 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -29,7 +35,7 @@ import java.util.Date;
 
 import io.realm.Realm;
 
-public class InputSpotActivity extends AppCompatActivity {
+public class InputSpotActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private Realm mRealm;                                       //このオブジェクトはDB更新に使う
 
     EditText mAddPlaceName;                             //投稿画面の場所の名前入力部分に対応
@@ -42,7 +48,12 @@ public class InputSpotActivity extends AppCompatActivity {
     Bitmap capturedImage;
     Uri mSaveUri;                                       //画像を保存するために使用するUri.Uriは住所みたいなもの.URLの親戚
     String filename;                                    //画像のファイル名をここに保存する.
+    private GoogleApiClient mGoogleApiClient = null;
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
+
+    //緯度・経度を入れる
+    public String ido;
+    public String keido;
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
@@ -86,6 +97,13 @@ public class InputSpotActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //値の受け取り
+        Intent intent = getIntent();
+        ido = intent.getStringExtra("ido");
+        keido = intent.getStringExtra("keido");
+        System.out.println("inputspotactivityですお　->  緯度" + ido);
+        System.out.println("inputspotactivityですお  ->  経度" + keido);
     }
 
 
@@ -93,6 +111,7 @@ public class InputSpotActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
 
+            //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
 
             //String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
@@ -117,7 +136,6 @@ public class InputSpotActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onPostingButtonTapped(View view) {
         //long currentTimeMillis = System.currentTimeMillis();
-
         final Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         //String dateParse = new String();
@@ -129,14 +147,14 @@ public class InputSpotActivity extends AppCompatActivity {
             in = getContentResolver().openInputStream(mSaveUri);
             ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
-            latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            //latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+            latitude = ido;
             longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+            longitude = keido;
         }
-        catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            System.out.println("おつかれ!!!!!!!!!!!!!!!!!!緯度" + latitude + "経度" + longitude);
+        catch (Exception ex) {
+            ex.printStackTrace();
         }
         final String date2 = df.format(date);
         mRealm.executeTransaction(new Realm.Transaction(){
@@ -158,6 +176,19 @@ public class InputSpotActivity extends AppCompatActivity {
                 //realm.commitTransaction();
             }
         });
+
+        //位置情報やってます
+        if(mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+
+        }
+        if(mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
         //ここにRealmにデータ追加する文を書く
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
@@ -170,4 +201,19 @@ public class InputSpotActivity extends AppCompatActivity {
         mRealm.close();                         //投稿画面から離れるときにDBのリソース開放
     }
 
+    @Override
+    public void onConnected(Bundle connectionHint) {
+        //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }
