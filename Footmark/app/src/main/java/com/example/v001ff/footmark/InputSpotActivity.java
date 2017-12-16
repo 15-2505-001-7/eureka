@@ -19,6 +19,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
+import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -32,13 +33,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-<<<<<<< HEAD
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-=======
->>>>>>> 1242376e478ff0c1670009551931586bc7265677
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -106,13 +104,11 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
                     */
-=======
 //                    values.put(MediaStore.Images.Media.TITLE, filename);
 //                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
 //                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
 //                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
 
->>>>>>> 1242376e478ff0c1670009551931586bc7265677
                     startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
 
                     Log.e("Debug","できてる");
@@ -140,7 +136,6 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
             //File imagefile = new File(path);                     //画像ファイルをfileに格納
             //if(BitmapFactory.decodeFile(path) == null) System.out.println("bitmapの中身ないやんけ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-<<<<<<< HEAD
             /*
             try {
                 capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
@@ -148,14 +143,11 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 e.printStackTrace();
             }
             */
-=======
 //            try {
 //                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //            }
->>>>>>> 1242376e478ff0c1670009551931586bc7265677
-
 
             capturedImage = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
@@ -182,7 +174,6 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         InputStream in = null;
         try {
             //String date2 = df.format(date);
-<<<<<<< HEAD
             in = getContentResolver().openInputStream(mSaveUri);
 
             //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
@@ -194,11 +185,9 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             Log.e("","Exifinterface");
             //これ以降がうまくいかない
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
-=======
             //in = getContentResolver().openInputStream(mSaveUri);
             //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
->>>>>>> 1242376e478ff0c1670009551931586bc7265677
             //latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             latitude = ido;
             //longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
@@ -224,7 +213,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 long nextPostNum = 0;
                 if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
                 //realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
+                FootmarkDataTable footmarkDataTable2 = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
                 footmarkDataTable.setPlaceNum(0);
                 footmarkDataTable.setPlaceId(nextPlaceId);
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
