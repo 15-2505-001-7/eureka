@@ -124,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
-        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
+        //mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
         //ここから先はデータベースの処理です
         //画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
@@ -203,6 +203,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setMyLocationEnabled(true);
     }
 
