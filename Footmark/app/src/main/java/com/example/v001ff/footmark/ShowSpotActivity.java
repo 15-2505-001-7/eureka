@@ -63,9 +63,25 @@ public class ShowSpotActivity extends AppCompatActivity
         //[課題]閲覧画面の画像がデモ画像のままなので追加投稿で画像を更新できるようにする!
         //[課題]画像5枚を表示させるようにする
         RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
+        long maxPlaceNum = query.max("PlaceNum").longValue();
+        Bitmap[] bitmap = new Bitmap[8];
+        int j=0;
+        for(long i=maxPlaceNum; i>=maxPlaceNum-8;i--){
+            if(i<0){
+                break;
+            }else{
+                System.out.println("iの中身は" + i + "maxPlaceNumの中身は" + maxPlaceNum + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1");
+                RealmResults<FootmarkDataTable> query2 = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", PID).equalTo("PlaceNum", i).findAll();
+                FootmarkDataTable footmarkDataTable2 = query2.first();
+                byte[] bytes = footmarkDataTable2.getPlaceImage();
+                bitmap[j] = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                j++;
+            }
+        }
         FootmarkDataTable footmarkdatatable = query.first();
         ((TextView) findViewById(R.id.spotname)).setText(footmarkdatatable.getPlaceName());//地名の表示
 
+<<<<<<< HEAD
         byte[] bytes = footmarkdatatable.getPlaceImage();
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
@@ -76,6 +92,35 @@ public class ShowSpotActivity extends AppCompatActivity
         ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap);
         ((ImageView) findViewById(R.id.place_image2)).setImageBitmap(bitmap);
         ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap);//最新の画像を表示
+=======
+        if(bitmap[7] != null){
+            ((ImageView) findViewById(R.id.place_image8)).setImageBitmap(bitmap[7]);
+        }else{
+
+        }
+        if(bitmap[6] != null){
+            ((ImageView) findViewById(R.id.place_image7)).setImageBitmap(bitmap[6]);
+        }
+        if(bitmap[5] != null){
+            ((ImageView) findViewById(R.id.place_image6)).setImageBitmap(bitmap[5]);
+        }
+        if(bitmap[4] != null){
+            ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap[4]);
+        }
+        if(bitmap[3] != null){
+            ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap[3]);
+        }
+        if(bitmap[2] != null){
+            ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap[2]);
+        }
+
+        if(bitmap[1] != null){
+            ((ImageView) findViewById(R.id.place_image2)).setImageBitmap(bitmap[1]);
+        }
+        if(bitmap[0] != null){
+            ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap[0]);//最新の画像を表示
+        }
+>>>>>>> 1242376e478ff0c1670009551931586bc7265677
 
         //createTestData();
         showSpotList();
