@@ -81,16 +81,33 @@ public class ShowSpotActivity extends AppCompatActivity
         FootmarkDataTable footmarkdatatable = query.first();
         ((TextView) findViewById(R.id.spotname)).setText(footmarkdatatable.getPlaceName());//地名の表示
 
+        if(bitmap[7] != null){
+            ((ImageView) findViewById(R.id.place_image8)).setImageBitmap(bitmap[7]);
+        }else{
 
+        }
+        if(bitmap[6] != null){
+            ((ImageView) findViewById(R.id.place_image7)).setImageBitmap(bitmap[6]);
+        }
+        if(bitmap[5] != null){
+            ((ImageView) findViewById(R.id.place_image6)).setImageBitmap(bitmap[5]);
+        }
+        if(bitmap[4] != null){
+            ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap[4]);
+        }
+        if(bitmap[3] != null){
+            ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap[3]);
+        }
+        if(bitmap[2] != null){
+            ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap[2]);
+        }
 
-        ((ImageView) findViewById(R.id.place_image8)).setImageBitmap(bitmap[7]);
-        ((ImageView) findViewById(R.id.place_image7)).setImageBitmap(bitmap[6]);
-        ((ImageView) findViewById(R.id.place_image6)).setImageBitmap(bitmap[5]);
-        ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap[4]);
-        ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap[3]);
-        ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap[2]);
-        ((ImageView) findViewById(R.id.place_image2)).setImageBitmap(bitmap[1]);
-        ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap[0]);//最新の画像を表示
+        if(bitmap[1] != null){
+            ((ImageView) findViewById(R.id.place_image2)).setImageBitmap(bitmap[1]);
+        }
+        if(bitmap[0] != null){
+            ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap[0]);//最新の画像を表示
+        }
 
         //createTestData();
         showSpotList();

@@ -24,6 +24,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.LocationRequest;
@@ -54,12 +55,19 @@ import io.realm.RealmResults;
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener, LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener,
+        GoogleMap.OnInfoWindowClickListener, LocationListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
     private Realm mRealm;
     private LocationManager manager = null;
+
+    private TextView latitude;
+    private TextView longitude;
+    private TextView altitude;
+    protected Location mLastLocation;
+
     long counter = 0;
     public double x;
     public double y;
@@ -92,17 +100,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    @Override
+    protected void onPause(){
+        if(manager!=null){
+            manager.removeUpdates(this);
+        }
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume(){
+        if(manager!=null){
+            if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected  void onStart(){
+        super.onStart();
+        final boolean gpsEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if(!gpsEnabled){
+            enableLocationSettings();
+        }
+    }
+
     public void start() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        super.onStart();
-        final boolean gpsEnabled = manager.isProviderEnabled(
-                LocationManager.GPS_PROVIDER
-        );
-        if(!gpsEnabled) {
-            enableLocationSettings();
-        }
     }
 
     private void enableLocationSettings() {
@@ -124,7 +153,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
-        //mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
         //ここから先はデータベースの処理です
         //画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
@@ -144,6 +172,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Bitmap bmp2 = BitmapFactory.decodeResource(r2, R.drawable.demo2);
             final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
 
+            Resources r3 = getResources();                                               //デモ用のユーザ情報を設定
+            Bitmap bmp3 = BitmapFactory.decodeResource(r3, R.drawable.man);
+            final byte[] bytes3 = MyUtils.getByteFromImage(bmp3);
+            Resources r4 = getResources();
+            Bitmap bmp4 = BitmapFactory.decodeResource(r4, R.drawable.washokuman);
+            final byte[] bytes4 = MyUtils.getByteFromImage(bmp4);
 
             mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
@@ -152,9 +186,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setPlaceName("山口大学工学部");
                     footmarkDataTable.setTitle("山口大学工学部です");
                     footmarkDataTable.setReviewBody("山口大学工学部です");
+                    footmarkDataTable.setAccountName("スクラムダイキ");
+                    footmarkDataTable.setAccountImage(bytes3);
+                    footmarkDataTable.setAccountId(0);
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(bytes1);
+                    footmarkDataTable.setPlaceId(0);
+                    footmarkDataTable.setPlaceNum(0);
                     footmarkDataTable.setLatitude("33.9567058");
                     footmarkDataTable.setLongitude("131.2727738");
 
@@ -162,9 +201,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setPlaceName("フジグラン宇部");
                     footmarkDataTable.setTitle("フジグラン宇部です");
                     footmarkDataTable.setReviewBody("フジグラン宇部です");
+                    footmarkDataTable.setAccountName("マスターワカモト");
+                    footmarkDataTable.setAccountImage(bytes4);
+                    footmarkDataTable.setAccountId(1);
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(bytes2);
+                    footmarkDataTable.setPlaceId(1);
+                    footmarkDataTable.setPlaceNum(0);
                     footmarkDataTable.setLatitude("33.9304745");
                     footmarkDataTable.setLongitude("131.2556893");
                 }
@@ -177,6 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Number maxPlaceId = mRealm.where(FootmarkDataTable.class).max("PlaceId");
+        System.out.println("maxPlaceIdは" + maxPlaceId + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
         for (int i = 0; i <= maxPlaceId.intValue(); i++) {
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
@@ -204,6 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
     }
 
     //位置情報許可の確認
@@ -332,22 +378,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
-    }
-
-    @Override
-    protected void onResume() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
-        super.onResume();
     }
 
     private void startLocationUpdates() {

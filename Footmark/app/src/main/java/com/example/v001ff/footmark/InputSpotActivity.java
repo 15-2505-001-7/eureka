@@ -5,8 +5,9 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.media.ExifInterface;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,7 +27,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -87,10 +87,11 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                     filename = System.currentTimeMillis() + ".jpg";
                     ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.TITLE, filename);
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+//                    values.put(MediaStore.Images.Media.TITLE, filename);
+//                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+//                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
+//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+
                     startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
 
                 }
@@ -101,8 +102,8 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         Intent intent = getIntent();
         ido = intent.getStringExtra("ido");
         keido = intent.getStringExtra("keido");
-        System.out.println("inputspotactivityですお　->  緯度" + ido);
-        System.out.println("inputspotactivityですお  ->  経度" + keido);
+        System.out.println("inputspotactivityですお　->  緯度" + ido + "!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("inputspotactivityですお  ->  経度" + keido + "!!!!!!!!!!!!!!!!!");
     }
 
 
@@ -110,17 +111,17 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
 
-            //capturedImage = (Bitmap) data.getExtras().get("data");
-            //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            capturedImage = (Bitmap) data.getExtras().get("data");                          //画質悪い版
+            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
 
             //String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
             //File imagefile = new File(path);                     //画像ファイルをfileに格納
             //if(BitmapFactory.decodeFile(path) == null) System.out.println("bitmapの中身ないやんけ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            try {
-                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
 
             //capturedImage = (Bitmap) data.getExtras().get("data");
@@ -140,17 +141,23 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         //String dateParse = new String();
         final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
+        Resources r = getResources();
+        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.yamame);
+        final byte[] byteDemoUser = MyUtils.getByteFromImage(bmp);
+
+
         InputStream in = null;
         try {
             //String date2 = df.format(date);
-            in = getContentResolver().openInputStream(mSaveUri);
-            ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
-            latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
+            //in = getContentResolver().openInputStream(mSaveUri);
+            //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
+            //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             //latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
             latitude = ido;
-            longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
+            //longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
             //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
             longitude = keido;
+            System.out.println("緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -160,15 +167,18 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             @Override
             public void execute(Realm realm){
                 Number maxPlaceId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                long nextPlaceId = 0;
-                if(maxPlaceId != null) nextPlaceId = maxPlaceId.longValue() + 1;                //PlaceIdを連番で管理
+                int nextPlaceId = 0;
+                if(maxPlaceId != null) nextPlaceId = maxPlaceId.intValue() + 1;                //PlaceIdを連番で管理
                 Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");
                 long nextPostNum = 0;
                 if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
                 footmarkDataTable.setPlaceNum(0);
+                footmarkDataTable.setPlaceId(nextPlaceId);
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
+                footmarkDataTable.setAccountName("デモユーザーさん");
+                footmarkDataTable.setAccountImage(byteDemoUser);
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);
                 //footmarkDataTable.setPlaceDate(date);

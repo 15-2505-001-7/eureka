@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -98,7 +100,11 @@ public class AddSpotActivity extends AppCompatActivity {
         final Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
-        /*
+
+        Resources r = getResources();                                  //デモユーザーの情報を設定
+        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.yamame);
+        final byte[] byteDemoUser = MyUtils.getByteFromImage(bmp);/*
+
         try {
             dateParse = sdf.parse(mDate.getText().toString());
             ExifInterface exifInterface = new ExifInterface(capturedImage.toString());              //p283にRealmでの画像の扱い方書いてるので参照して修正予定
@@ -126,6 +132,8 @@ public class AddSpotActivity extends AppCompatActivity {
                 //realm.beginTransaction();
                 FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
                 footmarkDataTable.setPlaceNum(nextPlaceNum);
+                footmarkDataTable.setAccountName("デモユーザーさん");
+                footmarkDataTable.setAccountImage(byteDemoUser);
                 footmarkDataTable.setReviewBody(mAddReview.getText().toString());
                 footmarkDataTable.setReviewDate(date2);
                 footmarkDataTable.setPlaceImage(bytes);
@@ -148,7 +156,7 @@ public class AddSpotActivity extends AppCompatActivity {
         */
 
 
-        startActivity(new Intent(AddSpotActivity.this, InputSpotActivity.class));
+        startActivity(new Intent(AddSpotActivity.this, MapsActivity.class));
         finish();
     }
 
