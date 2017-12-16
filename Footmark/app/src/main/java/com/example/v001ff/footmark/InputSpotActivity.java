@@ -2,7 +2,6 @@ package com.example.v001ff.footmark;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
@@ -16,11 +15,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +32,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -90,13 +93,17 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     // パーミッションが必要な処理。以下でカメラ起動。
                     Intent intent = new Intent();
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                    /*
                     filename = System.currentTimeMillis() + ".jpg";
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Images.Media.TITLE, filename);
                     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
                     mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+                    */
                     startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
+
+                    Log.e("Debug","できてる");
 
                 }
             }
@@ -121,17 +128,19 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
             //File imagefile = new File(path);                     //画像ファイルをfileに格納
             //if(BitmapFactory.decodeFile(path) == null) System.out.println("bitmapの中身ないやんけ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            /*
             try {
                 capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            */
 
 
-            //capturedImage = (Bitmap) data.getExtras().get("data");
-            //ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            //Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
-            //capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            capturedImage = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
+            capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
         }
@@ -149,11 +158,13 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         try {
             //String date2 = df.format(date);
             in = getContentResolver().openInputStream(mSaveUri);
-            ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
+
+            //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             //[課題]画像からの位置情報を取得
             String filename1 = saveBitmap(capturedImage);
+            ExifInterface exifInterface = new ExifInterface(filename1);
             Log.e("filenameの中身は",filename1);
-            ExifInterface exifInterface = new ExifInterface(filename1);//p283にRealmでの画像の扱い方書いてるので参照して修正予定
+            //ExifInterface exifInterface = new ExifInterface(filename1);//p283にRealmでの画像の扱い方書いてるので参照して修正予定
             Log.e("","Exifinterface");
             //これ以降がうまくいかない
             latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
@@ -264,5 +275,20 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
 
         Log.e("InputSpotActivity","完成!");
         return AttachName;
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
