@@ -141,7 +141,8 @@ public class AddSpotActivity extends AppCompatActivity {
         */
 
 
-        startActivity(new Intent(AddSpotActivity.this, ShowSpotActivity.class));
+        startActivity(new Intent(AddSpotActivity.this, InputSpotActivity.class));
+        finish();
     }
 
     @Override

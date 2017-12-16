@@ -78,6 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     long counter = 0;
     public double x;
     public double y;
+    public LatLng z;
     //private RequestingLocationUpdates mRequestingLocationUpdates;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return;
             }
             manager.requestLocationUpdates
-                    (LocationManager.GPS_PROVIDER, 10, 10, this);
+                    (LocationManager.GPS_PROVIDER, 100, 10, this);
         }
         super.onResume();
     }
@@ -186,7 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             //altitude.setText(str);
             x = location.getLatitude();
             y = location.getLongitude();
-            LatLng z = new LatLng(x, y);
+            z = new LatLng(x, y);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(z));
             counter += 1;
         }
@@ -271,6 +272,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng yu = new LatLng(33.9567058, 131.2727738);
         LatLng zu = new LatLng(33.9304745, 131.2556893);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        manager.requestLocationUpdates
+                (LocationManager.GPS_PROVIDER, 10, 10, this);
         /*mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
