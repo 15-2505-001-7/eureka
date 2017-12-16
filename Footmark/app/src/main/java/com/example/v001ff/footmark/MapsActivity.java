@@ -1,14 +1,20 @@
 package com.example.v001ff.footmark;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.AppLaunchChecker;
@@ -25,6 +31,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -44,25 +51,31 @@ import java.util.Date;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-import static android.R.attr.x;
-import static android.R.attr.y;
 import static com.example.v001ff.footmark.R.mipmap.sample;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,View.OnClickListener, GoogleMap.OnInfoWindowClickListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener, GoogleMap.OnInfoWindowClickListener, LocationListener {
 
     private GoogleMap mMap;
     private final int REQUEST_PERMISSION = 1000;
     private Realm mRealm;
+    private LocationManager manager = null;
+    long counter = 0;
+    public double x;
+    public double y;
+    public LatLng z;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
             Thread.sleep(2000);
-        }catch(InterruptedException e) {
+        } catch (InterruptedException e) {
         }
         setTheme(R.style.AppTheme);//splash表示する
+
+        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);
 
         //対応検討中(も)
         //InputSpotFragment fragment = new InputSpotFragment();
@@ -83,6 +96,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        super.onStart();
+        final boolean gpsEnabled = manager.isProviderEnabled(
+                LocationManager.GPS_PROVIDER
+        );
+        if(!gpsEnabled) {
+            enableLocationSettings();
+        }
+    }
+
+    private void enableLocationSettings() {
+        Intent settingsIntent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        startActivity(settingsIntent);
     }
 
 
@@ -91,24 +116,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng yu = new LatLng(33.9567058, 131.2727738);
-        LatLng zu = new LatLng(33.9304745,  131.2556893);
+        LatLng zu = new LatLng(33.9304745, 131.2556893);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 /*        mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
         /*mMap.addMarker(new MarkerOptions().position(yu).title("山口大学工学部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
-                .icon(BitmapDescriptorFactory.fromResource(sample)));
+                .icon(BitmapDescriptorFactory.fromResource(sample)));*/
         mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
         mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
-/*        ここから先はデータベースの処理です
-          画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
-*/
+        //ここから先はデータベースの処理です
+        //画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
 
-        if(AppLaunchChecker.hasStartedFromLauncher(this)){                              //2回目以降の起動はデモの格納はしない
-            Log.d("AppLaunchChecker","2回目以降");
+
+        if (AppLaunchChecker.hasStartedFromLauncher(this)) {                              //2回目以降の起動はデモの格納はしない
+            Log.d("AppLaunchChecker", "2回目以降");
         } else {
-            Log.d("AppLaunchChecker","はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
+            Log.d("AppLaunchChecker", "はじめてアプリを起動した");                 //初回の起動はデモデータをデータベースに入れる
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
             Date date = new Date();
             final String mDate = sdf.format(date);
@@ -120,9 +145,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
 
 
-            mRealm.executeTransaction(new Realm.Transaction(){                      //デモ用のデータをここでデータベースに格納しています.
+            mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
-                public void execute(Realm realm){
+                public void execute(Realm realm) {
                     FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, 0);
                     footmarkDataTable.setPlaceName("山口大学工学部");
                     footmarkDataTable.setTitle("山口大学工学部です");
@@ -153,7 +178,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Number maxPlaceId = mRealm.where(FootmarkDataTable.class).max("PlaceId");
         ArrayList<LatLng> latlng = new ArrayList<LatLng>();
-        for(int i=0; i<=maxPlaceId.intValue(); i++){
+        for (int i = 0; i <= maxPlaceId.intValue(); i++) {
             RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId", i).findAll();
             FootmarkDataTable footmarkdatatable = query.first();
             String stringLatitude = footmarkdatatable.getLatitude();
@@ -162,11 +187,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             double Longitude = Double.parseDouble(stringLongitude);                 //PlaceIdに対応する経度の取得
             String mPlaceName = footmarkdatatable.getPlaceName();                   //PlaceIdに対応する場所の名前の取得
 
-            latlng.add(new LatLng(Latitude,Longitude));                             //緯度経度を渡してlatlngクラス作成
+            latlng.add(new LatLng(Latitude, Longitude));                             //緯度経度を渡してlatlngクラス作成
             mMap.addMarker(new MarkerOptions().position(latlng.get(i)).title(mPlaceName)
                     .icon(BitmapDescriptorFactory.fromResource(sample)));
         }
-
 
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -211,8 +235,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Intent intent = new Intent(getApplication(), InputSpotActivity.class);
         String xstring = Double.toString(x);
         String ystring = Double.toString(y);
-        intent.putExtra("ido",xstring);
-        intent.putExtra("keido",ystring);
+        intent.putExtra("ido", xstring);
+        intent.putExtra("keido", ystring);
         startActivity(intent);
     }
 
@@ -270,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     //位置情報やってんの！！！！
- protected void createLocationRequest() {
+    protected void createLocationRequest() {
         LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
@@ -310,13 +334,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    /*@Override
+    @Override
     protected void onResume() {
-        super.onResume();
-        /*if (mRequestingLocationUpdates) {
-            startLocationUpdates();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
-    }*/
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
+        super.onResume();
+    }
 
     private void startLocationUpdates() {
         /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -345,6 +377,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         /*outState.putBoolean(REQUESTING_LOCATION_UPDATES_KEY,
                 mRequestingLocationUpdates);
         super.onSaveInstanceState(outState);*/
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if(counter<3){
+            x = location.getLatitude();
+            y = location.getLongitude();
+            z = new LatLng(x, y);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(z));
+            counter += 1;
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 
     /*@Override
