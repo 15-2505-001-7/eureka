@@ -303,10 +303,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
         values.put(MediaStore.Images.Media.TITLE, fileName);
         values.put("_data", AttachName);
-        Log.e("InputSpotActivity","ここまでok!!!!!");
         contentResolver.insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);//ここができたら完成
-
-        Log.e("InputSpotActivity","完成!");
         return AttachName;
     }
 
