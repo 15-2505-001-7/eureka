@@ -123,8 +123,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.fromResource(sample)));
         mMap.addMarker(new MarkerOptions().position(zu).title("フジグラン宇部")
                 .icon(BitmapDescriptorFactory.fromResource(sample)));*/
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(yu));                     //緯度経度の情報がアプリ起動時に中心に表示される
-        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
 
         //ここから先はデータベースの処理です
         //画像をデータベースに入れるとこでエラーが出るんで,そこを解決できればデモデータもデータベースに格納できます
@@ -152,6 +150,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setPlaceName("山口大学工学部");
                     footmarkDataTable.setTitle("山口大学工学部です");
                     footmarkDataTable.setReviewBody("山口大学工学部です");
+                    footmarkDataTable.setPostNum(0);
+                    footmarkDataTable.setPlaceNum(0);
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(bytes1);
@@ -162,6 +162,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setPlaceName("フジグラン宇部");
                     footmarkDataTable.setTitle("フジグラン宇部です");
                     footmarkDataTable.setReviewBody("フジグラン宇部です");
+                    footmarkDataTable.setPostNum(1);
+                    footmarkDataTable.setPlaceNum(0);
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(bytes2);
@@ -204,6 +206,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+        mMap.setOnInfoWindowClickListener(this);                               //InfoWindowがタップされたときの処理
     }
 
     //位置情報許可の確認
