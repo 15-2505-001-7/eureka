@@ -193,6 +193,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
         startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
+        finish();
     }
 
     @Override
