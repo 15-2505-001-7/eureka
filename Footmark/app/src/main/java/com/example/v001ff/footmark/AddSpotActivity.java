@@ -140,7 +140,9 @@ public class AddSpotActivity extends AppCompatActivity {
         ((ImageView) findViewById(R.id.place_image)).setImageBitmap(bitmap);
         */
 
-        startActivity(new Intent(AddSpotActivity.this, ShowSpotActivity.class));
+
+        startActivity(new Intent(AddSpotActivity.this, InputSpotActivity.class));
+        finish();
     }
 
     @Override
