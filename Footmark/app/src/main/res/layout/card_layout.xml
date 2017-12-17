@@ -61,6 +61,8 @@
                 android:text="報告する"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textSize="8sp"
+                android:clickable="true"
+                android:onClick="onBudinfoTapped"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/spotinfo" />

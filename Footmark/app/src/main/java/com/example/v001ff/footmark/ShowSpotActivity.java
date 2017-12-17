@@ -119,6 +119,10 @@ public class ShowSpotActivity extends AppCompatActivity
         mRealm.close();
     }
 
+    public void onBudinfoTapped(View view){
+        Toast.makeText(this, "この投稿を報告しました!", Toast.LENGTH_SHORT).show();
+    }
+
     /*private void createTestData() {
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
