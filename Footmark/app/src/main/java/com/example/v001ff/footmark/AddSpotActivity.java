@@ -42,6 +42,9 @@ public class AddSpotActivity extends AppCompatActivity {
     Bitmap capturedImage;
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
+    boolean image = false;
+    boolean review = false;
+
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
     @Override
@@ -94,26 +97,27 @@ public class AddSpotActivity extends AppCompatActivity {
             ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
             capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+            image = true;
         }
     }
 
     public void onPostingButtonTapped(View view) {
-        if(capturedImage == null){
+        if(!image){
             Toast.makeText(this, "画像が未入力です!", Toast.LENGTH_SHORT).show();
-        }else if(mAddReview.getText().toString() == ""){
+        }else if(mAddReview.getText().toString().equals("")){
             Log.e("","mAddReviewが未入力です");
             Toast.makeText(this, "本文が未入力です!", Toast.LENGTH_SHORT).show();
-        }else if(capturedImage == null && mAddReview == null){
+        }else if(!image && mAddReview == null){
             Log.e("","どっちも未入力です");
             Toast.makeText(this, "画像・本文が未入力です!", Toast.LENGTH_SHORT).show();
-        }
-        final Date date = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
+        }else{
+            final Date date = new Date();
+            DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+            final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
-        Resources r = getResources();                                  //デモユーザーの情報を設定
-        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.yamame);
-        final byte[] byteDemoUser = MyUtils.getByteFromImage(bmp);/*
+            Resources r = getResources();                                  //デモユーザーの情報を設定
+            Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.yamame);
+            final byte[] byteDemoUser = MyUtils.getByteFromImage(bmp);/*
 
         try {
             dateParse = sdf.parse(mDate.getText().toString());
@@ -127,36 +131,36 @@ public class AddSpotActivity extends AppCompatActivity {
             ex.printStackTrace();
         }
         */
-        //final Date date = dateParse;
-        final String date2 = df.format(date);
-        mRealm.executeTransaction(new Realm.Transaction(){
-            @Override
-            public void execute(Realm realm){
-                Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");                        //最大の投稿数を取得する
-                long nextPostNum = 0;
-                if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
-                RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
-                Number maxPlaceNum = query.max("PlaceNum");                                                              //最大の場所ごとの投稿数を取得する
-                int nextPlaceNum = 0;
-                if(maxPlaceNum != null) nextPlaceNum = maxPlaceNum.intValue() + 1;
-                //realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
-                footmarkDataTable.setPlaceNum(nextPlaceNum);
-                footmarkDataTable.setAccountName("デモユーザーさん");
-                footmarkDataTable.setAccountImage(byteDemoUser);
-                footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                footmarkDataTable.setReviewDate(date2);
-                footmarkDataTable.setPlaceImage(bytes);
-                footmarkDataTable.setPlaceId(PID);
-                //footmarkDataTable.setLatitude(latitude);
-                //footmarkDataTable.setLongitude(longitude);
-                //realm.commitTransaction();
-            }
-        });
-        //ここにRealmにデータ追加する文を書く
-        //Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
+            //final Date date = dateParse;
+            final String date2 = df.format(date);
+            mRealm.executeTransaction(new Realm.Transaction(){
+                @Override
+                public void execute(Realm realm){
+                    Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");                        //最大の投稿数を取得する
+                    long nextPostNum = 0;
+                    if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
+                    RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).equalTo("PlaceId",PID).findAll();
+                    Number maxPlaceNum = query.max("PlaceNum");                                                              //最大の場所ごとの投稿数を取得する
+                    int nextPlaceNum = 0;
+                    if(maxPlaceNum != null) nextPlaceNum = maxPlaceNum.intValue() + 1;
+                    //realm.beginTransaction();
+                    FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
+                    footmarkDataTable.setPlaceNum(nextPlaceNum);
+                    footmarkDataTable.setAccountName("デモユーザーさん");
+                    footmarkDataTable.setAccountImage(byteDemoUser);
+                    footmarkDataTable.setReviewBody(mAddReview.getText().toString());
+                    footmarkDataTable.setReviewDate(date2);
+                    footmarkDataTable.setPlaceImage(bytes);
+                    footmarkDataTable.setPlaceId(PID);
+                    //footmarkDataTable.setLatitude(latitude);
+                    //footmarkDataTable.setLongitude(longitude);
+                    //realm.commitTransaction();
+                }
+            });
+            //ここにRealmにデータ追加する文を書く
+            Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        //追加箇所
+            //追加箇所
         /*
         RealmResults<FootmarkDataTable> query = mRealm.where(FootmarkDataTable.class).findAll();
         FootmarkDataTable footmarkdatatable = query.first();
@@ -166,8 +170,10 @@ public class AddSpotActivity extends AppCompatActivity {
         */
 
 
-        startActivity(new Intent(AddSpotActivity.this, MapsActivity.class));
-        finish();
+            startActivity(new Intent(AddSpotActivity.this, MapsActivity.class));
+            finish();
+        }
+
     }
 
     @Override
