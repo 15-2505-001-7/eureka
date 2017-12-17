@@ -27,6 +27,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -87,10 +88,10 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                     filename = System.currentTimeMillis() + ".jpg";
                     ContentValues values = new ContentValues();
-//                    values.put(MediaStore.Images.Media.TITLE, filename);
-//                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-//                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
-//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+                    values.put(MediaStore.Images.Media.TITLE, filename);
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
 
                     startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
 
@@ -111,17 +112,17 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
 
-            capturedImage = (Bitmap) data.getExtras().get("data");                          //画質悪い版
-            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+//            capturedImage = (Bitmap) data.getExtras().get("data");                          //画質悪い版
+//            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
 
             //String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
             //File imagefile = new File(path);                     //画像ファイルをfileに格納
             //if(BitmapFactory.decodeFile(path) == null) System.out.println("bitmapの中身ないやんけ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-//            try {
-//                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+            try {
+                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
 
             //capturedImage = (Bitmap) data.getExtras().get("data");
