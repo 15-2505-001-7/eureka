@@ -81,16 +81,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (InterruptedException e) {
         }
         setTheme(R.style.AppTheme);//splash表示する
+        setContentView(R.layout.activity_maps);
 
-        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);
+        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);        //位置情報を利用するための準備
+        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);              //GPSを用いて位置情報を利用できるか確認するのに使う
 
         //対応検討中(も)
         //InputSpotFragment fragment = new InputSpotFragment();
         //getFragmentManager().beginTransaction().add
         //        (android.R.id.content, fragment, "InputSpotFragment").commit();
 
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_maps);                     //パーミッション全部許可してないと最初に設定画面に飛ばされる
         if (Build.VERSION.SDK_INT >= 23)
             checkPermission();
         else
@@ -103,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause(){
         if(manager!=null){
-            manager.removeUpdates(this);
+            manager.removeUpdates(this);                //位置情報の取得処理を終了する
         }
         super.onPause();
     }
