@@ -82,8 +82,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         setTheme(R.style.AppTheme);//splash表示する
 
-        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);
+        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);        //位置情報を利用するための準備
+        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);              //providerはGPSを用いて位置情報を取得できるか確認するのに使う
 
         //対応検討中(も)
         //InputSpotFragment fragment = new InputSpotFragment();
@@ -91,32 +91,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //        (android.R.id.content, fragment, "InputSpotFragment").commit();
 
         setContentView(R.layout.activity_maps);
-        if (Build.VERSION.SDK_INT >= 23)
+        if (Build.VERSION.SDK_INT >= 23)                                //パーミッションを全部許可してないと設定画面に飛ばされる
             checkPermission();
         else
             start();
 
         mRealm = Realm.getDefaultInstance();                  //データベース使用する準備
-    }
-
-
-    @Override
-    protected void onPause(){
-        if(manager!=null){
-            manager.removeUpdates(this);
-        }
-        super.onPause();
-    }
-
-    @Override
-    protected void onResume(){
-        if(manager!=null){
-            if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);
-        }
-        super.onResume();
     }
 
     @Override
@@ -125,6 +105,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final boolean gpsEnabled = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if(!gpsEnabled){
             enableLocationSettings();
+        }
+    }
+
+    @Override
+    protected void onResume(){                  //アクティビティが最前面に復帰したときの処理
+        if(manager!=null){
+            if(ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 10, this);        //位置情報のパーミッションがオンなら位置情報を取得する
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause(){               //ほかのアクティビティが最前面になると実行
+        super.onPause();
+        if(manager!=null){
+            manager.removeUpdates(this);                //位置情報取得を中断
         }
     }
 
@@ -529,13 +528,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(Location location) {                  //位置情報が取得されたときの処理
         if(counter<3){
             x = location.getLatitude();
             y = location.getLongitude();
             z = new LatLng(x, y);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(z));
             counter += 1;
+            System.out.println("緯度 "+ x + "経度" + y + "!!!!!!!!!!!!!!!!!!!!!!!!!!1");
         }
     }
 
