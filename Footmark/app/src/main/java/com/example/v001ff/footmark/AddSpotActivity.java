@@ -13,6 +13,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -97,6 +98,15 @@ public class AddSpotActivity extends AppCompatActivity {
     }
 
     public void onPostingButtonTapped(View view) {
+        if(capturedImage == null){
+            Toast.makeText(this, "画像が未入力です!", Toast.LENGTH_SHORT).show();
+        }else if(mAddReview.getText().toString() == ""){
+            Log.e("","mAddReviewが未入力です");
+            Toast.makeText(this, "本文が未入力です!", Toast.LENGTH_SHORT).show();
+        }else if(capturedImage == null && mAddReview == null){
+            Log.e("","どっちも未入力です");
+            Toast.makeText(this, "画像・本文が未入力です!", Toast.LENGTH_SHORT).show();
+        }
         final Date date = new Date();
         DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
         final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
@@ -144,7 +154,7 @@ public class AddSpotActivity extends AppCompatActivity {
             }
         });
         //ここにRealmにデータ追加する文を書く
-        Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
         //追加箇所
         /*

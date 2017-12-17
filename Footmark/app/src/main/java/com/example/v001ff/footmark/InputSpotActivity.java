@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -32,7 +31,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -94,10 +92,9 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     // パーミッションが必要な処理。以下でカメラ起動。
                     Intent intent = new Intent();
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                    /*
                     filename = System.currentTimeMillis() + ".jpg";
                     ContentValues values = new ContentValues();
-<<<<<<< HEAD
+                    /*
                     values.put(MediaStore.Images.Media.TITLE, filename);
                     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
                     mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
@@ -148,10 +145,10 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
 //                e.printStackTrace();
 //            }
 
-            capturedImage = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
-            capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            //capturedImage = (Bitmap) data.getExtras().get("data");
+            //ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            //Bitmap capturedImage1 = Bitmap.createScaledBitmap(capturedImage,300,469,false); //300×469にリサイズ
+            //capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
         }
@@ -173,7 +170,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         InputStream in = null;
         try {
             //String date2 = df.format(date);
-            in = getContentResolver().openInputStream(mSaveUri);
+            //in = getContentResolver().openInputStream(mSaveUri);
 
             //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             //[課題]画像からの位置情報を取得
@@ -192,7 +189,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
             //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
             longitude = keido;
-            System.out.println("緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
+            Log.e("","緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -259,7 +256,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         final String SAVE_DIR = "/MyPhoto/";
         //File file = new File("/storage/sdcard/Android/data/MyPhoto");
         File file = new File(Environment.getExternalStorageDirectory().getPath() + SAVE_DIR);
-        final File topDir = getDir("MyApp_folder", Context.MODE_PRIVATE);
+        //final File topDir = getDir("MyApp_folder", Context.MODE_PRIVATE);
         //File file = new File(topDir, "sub_dir");
 
         try {

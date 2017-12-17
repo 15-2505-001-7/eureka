@@ -137,6 +137,10 @@ public class ShowSpotActivity extends AppCompatActivity
         });
     }*/
 
+    public void onBudinfoTapped(View view){
+        Toast.makeText(this, "この投稿を報告しました!", Toast.LENGTH_SHORT).show();
+    }
+
     private void showSpotList() {
         FragmentManager manager = getSupportFragmentManager();
         Fragment fragment = manager.findFragmentByTag("PostListFragment");
