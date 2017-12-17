@@ -34,6 +34,7 @@ import com.google.android.gms.location.LocationServices;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -94,20 +95,12 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
                     filename = System.currentTimeMillis() + ".jpg";
                     ContentValues values = new ContentValues();
-                    /*
                     values.put(MediaStore.Images.Media.TITLE, filename);
                     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
-                    */
-//                    values.put(MediaStore.Images.Media.TITLE, filename);
-//                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-//                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, values);
-//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
 
                     startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
-
-                    Log.e("Debug","できてる");
 
                 }
             }
@@ -117,8 +110,8 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         Intent intent = getIntent();
         ido = intent.getStringExtra("ido");
         keido = intent.getStringExtra("keido");
-        Log.e("","inputspotactivityですお　->  緯度" + ido + "!!!!!!!!!!!!!!!!!!!!!!");
-        Log.e("","inputspotactivityですお  ->  経度" + keido + "!!!!!!!!!!!!!!!!!");
+        System.out.println("inputspotactivityですお　->  緯度" + ido + "!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("inputspotactivityですお  ->  経度" + keido + "!!!!!!!!!!!!!!!!!");
     }
 
 
@@ -126,24 +119,18 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
 
-            capturedImage = (Bitmap) data.getExtras().get("data");                          //画質悪い版
-            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
+//            capturedImage = (Bitmap) data.getExtras().get("data");                          //画質悪い版
+//            ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
 
             //String path = mSaveUri.getPath();               //Uriのパスをpathに格納する.このpathを使って画像ファイルを参照する
             //File imagefile = new File(path);                     //画像ファイルをfileに格納
             //if(BitmapFactory.decodeFile(path) == null) System.out.println("bitmapの中身ないやんけ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            /*
             try {
                 capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            */
-//            try {
-//                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+
 
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
@@ -189,7 +176,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
             //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
             longitude = keido;
-            Log.e("","緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
+            System.out.println("緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
         }
         catch (Exception ex) {
             ex.printStackTrace();
@@ -198,11 +185,6 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-                //Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                //long nextId = 0;
-                //if(maxId != null) nextId = maxId.longValue() + 1;
-                //ここらへんで問題発生
-                //FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 Number maxPlaceId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 int nextPlaceId = 0;
                 if(maxPlaceId != null) nextPlaceId = maxPlaceId.intValue() + 1;                //PlaceIdを連番で管理
@@ -222,6 +204,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 footmarkDataTable.setPlaceImage(bytes);
                 footmarkDataTable.setLatitude(latitude);
                 footmarkDataTable.setLongitude(longitude);
+
                 //realm.commitTransaction();
             }
         });
@@ -304,7 +287,8 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
+    public void onConnected(Bundle connectionHint) {
+        //mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
     }
 
