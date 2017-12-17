@@ -81,22 +81,13 @@ public class ShowSpotActivity extends AppCompatActivity
         FootmarkDataTable footmarkdatatable = query.first();
         ((TextView) findViewById(R.id.spotname)).setText(footmarkdatatable.getPlaceName());//地名の表示
 
-<<<<<<< HEAD
-        byte[] bytes = footmarkdatatable.getPlaceImage();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        //byte[] bytes = footmarkdatatable.getPlaceImage();
+        //Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
 
         //((ImageView) findViewById(R.id.userphoto)).setImageBitmap(bitmap);//地名の表示
 
-        ((ImageView) findViewById(R.id.place_image5)).setImageBitmap(bitmap);
-        ((ImageView) findViewById(R.id.place_image4)).setImageBitmap(bitmap);
-        ((ImageView) findViewById(R.id.place_image3)).setImageBitmap(bitmap);
-        ((ImageView) findViewById(R.id.place_image2)).setImageBitmap(bitmap);
-        ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap);//最新の画像を表示
-=======
         if(bitmap[7] != null){
             ((ImageView) findViewById(R.id.place_image8)).setImageBitmap(bitmap[7]);
-        }else{
-
         }
         if(bitmap[6] != null){
             ((ImageView) findViewById(R.id.place_image7)).setImageBitmap(bitmap[6]);
@@ -120,7 +111,6 @@ public class ShowSpotActivity extends AppCompatActivity
         if(bitmap[0] != null){
             ((ImageView) findViewById(R.id.place_image1)).setImageBitmap(bitmap[0]);//最新の画像を表示
         }
->>>>>>> 1242376e478ff0c1670009551931586bc7265677
 
         //createTestData();
         showSpotList();

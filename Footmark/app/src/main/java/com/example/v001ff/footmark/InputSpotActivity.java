@@ -19,7 +19,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
-import android.support.media.ExifInterface;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -121,8 +120,8 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         Intent intent = getIntent();
         ido = intent.getStringExtra("ido");
         keido = intent.getStringExtra("keido");
-        System.out.println("inputspotactivityですお　->  緯度" + ido + "!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println("inputspotactivityですお  ->  経度" + keido + "!!!!!!!!!!!!!!!!!");
+        Log.e("","inputspotactivityですお　->  緯度" + ido + "!!!!!!!!!!!!!!!!!!!!!!");
+        Log.e("","inputspotactivityですお  ->  経度" + keido + "!!!!!!!!!!!!!!!!!");
     }
 
 
@@ -179,12 +178,12 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             //[課題]画像からの位置情報を取得
             String filename1 = saveBitmap(capturedImage);
-            ExifInterface exifInterface = new ExifInterface(filename1);
+            //ExifInterface exifInterface = new ExifInterface(filename1);
             Log.e("filenameの中身は",filename1);
             //ExifInterface exifInterface = new ExifInterface(filename1);//p283にRealmでの画像の扱い方書いてるので参照して修正予定
             Log.e("","Exifinterface");
             //これ以降がうまくいかない
-            latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
+            //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
             //in = getContentResolver().openInputStream(mSaveUri);
             //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
             //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
@@ -202,10 +201,11 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
         mRealm.executeTransaction(new Realm.Transaction(){
             @Override
             public void execute(Realm realm){
-                Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                long nextId = 0;
-                if(maxId != null) nextId = maxId.longValue() + 1;
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
+                //Number maxId = realm.where(FootmarkDataTable.class).max("PlaceId");
+                //long nextId = 0;
+                //if(maxId != null) nextId = maxId.longValue() + 1;
+                //ここらへんで問題発生
+                //FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextId));
                 Number maxPlaceId = realm.where(FootmarkDataTable.class).max("PlaceId");
                 int nextPlaceId = 0;
                 if(maxPlaceId != null) nextPlaceId = maxPlaceId.intValue() + 1;                //PlaceIdを連番で管理
@@ -213,7 +213,7 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 long nextPostNum = 0;
                 if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
                 //realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable2 = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
+                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
                 footmarkDataTable.setPlaceNum(0);
                 footmarkDataTable.setPlaceId(nextPlaceId);
                 footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
@@ -225,7 +225,6 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                 footmarkDataTable.setPlaceImage(bytes);
                 footmarkDataTable.setLatitude(latitude);
                 footmarkDataTable.setLongitude(longitude);
-
                 //realm.commitTransaction();
             }
         });
