@@ -2,11 +2,13 @@ package com.example.v001ff.footmark;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -19,7 +21,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -40,10 +42,12 @@ public class AddSpotActivity extends AppCompatActivity {
     String longitudeRef;                                         //画像から取得する経度
     String longitude;
     Bitmap capturedImage;
+    Uri mSaveUri;                                       //画像を保存するために使用するUri.Uriは住所みたいなもの.URLの親戚
+    String filename;                                    //画像のファイル名をここに保存する.
+
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
-    boolean image = false;
-    boolean review = false;
+    private boolean image = false;
 
     static final int REQUEST_CAPTURE_IMAGE = 100;
 
@@ -81,6 +85,13 @@ public class AddSpotActivity extends AppCompatActivity {
                     // パーミッションが必要な処理。以下でカメラ起動。
                     Intent intent = new Intent();
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+                    filename = System.currentTimeMillis() + ".jpg";
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, filename);
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
+
                     startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);
 
                 }
@@ -93,23 +104,28 @@ public class AddSpotActivity extends AppCompatActivity {
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-            capturedImage = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            //capturedImage = (Bitmap) data.getExtras().get("data");
+            //ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            //capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+
+            try {
+                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             image = true;
         }
     }
 
     public void onPostingButtonTapped(View view) {
-        if(!image){
+        if(!image && mAddReview == null){
+            Toast.makeText(this, "画像・本文が未入力です!", Toast.LENGTH_SHORT).show();
+        }else if(!image){
             Toast.makeText(this, "画像が未入力です!", Toast.LENGTH_SHORT).show();
         }else if(mAddReview.getText().toString().equals("")){
             Log.e("","mAddReviewが未入力です");
             Toast.makeText(this, "本文が未入力です!", Toast.LENGTH_SHORT).show();
-        }else if(!image && mAddReview == null){
-            Log.e("","どっちも未入力です");
-            Toast.makeText(this, "画像・本文が未入力です!", Toast.LENGTH_SHORT).show();
         }else{
             final Date date = new Date();
             DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）

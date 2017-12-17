@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -33,7 +32,6 @@ import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DateFormat;
@@ -57,6 +55,8 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
     String filename;                                    //画像のファイル名をここに保存する.
     private GoogleApiClient mGoogleApiClient = null;
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
+
+    private boolean image = false;
 
     //緯度・経度を入れる
     public String ido;
@@ -138,94 +138,106 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
             //capturedImage1.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
             //((ImageView) findViewById(R.id.place_image)).setImageBitmap(capturedImage1);
+            image = true;
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void onPostingButtonTapped(View view) {
-        //long currentTimeMillis = System.currentTimeMillis();
-        final Date date = new Date();
-        DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
-        //String dateParse = new String();
-        final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
-        Resources r = getResources();
-        Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.yamame);
-        final byte[] byteDemoUser = MyUtils.getByteFromImage(bmp);
+        if((!image && mAddPlaceName.getText().toString().equals("")) ||(!image && mAddReview.getText().toString().equals(""))
+        ||(mAddPlaceName.getText().toString().equals("") && mAddReview.getText().toString().equals(""))){
+            Toast.makeText(this, "画像・スポット名・本文のいずれかが未入力です!", Toast.LENGTH_SHORT).show();
+        }else if(!image){
+            Toast.makeText(this, "画像が未入力です!", Toast.LENGTH_SHORT).show();
+        }else if(mAddPlaceName.getText().toString().equals("")){
+            Toast.makeText(this, "スポット名が未入力です!", Toast.LENGTH_SHORT).show();
+        } else if(mAddReview.getText().toString().equals("")){
+            Toast.makeText(this, "本文が未入力です!", Toast.LENGTH_SHORT).show();
+        }else{
+            //long currentTimeMillis = System.currentTimeMillis();
+            final Date date = new Date();
+            DateFormat df = new SimpleDateFormat("yyyy/MM/dd");        //日付の取得（この段階ではString型）
+            //String dateParse = new String();
+            final byte[] bytes = MyUtils.getByteFromImage(capturedImage);
 
+            Resources r = getResources();
+            Bitmap bmp = BitmapFactory.decodeResource(r, R.drawable.yamame);
+            final byte[] byteDemoUser = MyUtils.getByteFromImage(bmp);
 
-        InputStream in = null;
-        try {
-            //String date2 = df.format(date);
-            //in = getContentResolver().openInputStream(mSaveUri);
+            InputStream in = null;
+            try {
+                //String date2 = df.format(date);
+                //in = getContentResolver().openInputStream(mSaveUri);
 
-            //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
-            //[課題]画像からの位置情報を取得
-            String filename1 = saveBitmap(capturedImage);
-            //ExifInterface exifInterface = new ExifInterface(filename1);
-            Log.e("filenameの中身は",filename1);
-            //ExifInterface exifInterface = new ExifInterface(filename1);//p283にRealmでの画像の扱い方書いてるので参照して修正予定
-            Log.e("","Exifinterface");
-            //これ以降がうまくいかない
-            //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
-            //in = getContentResolver().openInputStream(mSaveUri);
-            //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
-            //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
-            //latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
-            latitude = ido;
-            //longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
-            //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
-            longitude = keido;
-            System.out.println("緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        final String date2 = df.format(date);
-        mRealm.executeTransaction(new Realm.Transaction(){
-            @Override
-            public void execute(Realm realm){
-                Number maxPlaceId = realm.where(FootmarkDataTable.class).max("PlaceId");
-                int nextPlaceId = 0;
-                if(maxPlaceId != null) nextPlaceId = maxPlaceId.intValue() + 1;                //PlaceIdを連番で管理
-                Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");
-                long nextPostNum = 0;
-                if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
-                //realm.beginTransaction();
-                FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
-                footmarkDataTable.setPlaceNum(0);
-                footmarkDataTable.setPlaceId(nextPlaceId);
-                footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
-                footmarkDataTable.setAccountName("デモユーザーさん");
-                footmarkDataTable.setAccountImage(byteDemoUser);
-                footmarkDataTable.setReviewBody(mAddReview.getText().toString());
-                footmarkDataTable.setReviewDate(date2);
-                //footmarkDataTable.setPlaceDate(date);
-                footmarkDataTable.setPlaceImage(bytes);
-                footmarkDataTable.setLatitude(latitude);
-                footmarkDataTable.setLongitude(longitude);
-
-                //realm.commitTransaction();
+                //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
+                //[課題]画像からの位置情報を取得
+                String filename1 = saveBitmap(capturedImage);
+                //ExifInterface exifInterface = new ExifInterface(filename1);
+                Log.e("filenameの中身は",filename1);
+                //ExifInterface exifInterface = new ExifInterface(filename1);//p283にRealmでの画像の扱い方書いてるので参照して修正予定
+                //これ以降がうまくいかない
+                //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
+                //in = getContentResolver().openInputStream(mSaveUri);
+                //ExifInterface exifInterface = new ExifInterface(in);              //p283にRealmでの画像の扱い方書いてるので参照して修正予定　現在位置情報が取得できていない　原因はcapturedImage.toString()
+                //latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF);        //緯度の取得
+                //latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+                latitude = ido;
+                //longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF);      //経度の取得
+                //longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+                longitude = keido;
+                System.out.println("緯度" + latitude + "経度" + longitude + "!!!!!!!!!!!!!!!!!!!!");
             }
-        });
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            final String date2 = df.format(date);
+            mRealm.executeTransaction(new Realm.Transaction(){
+                @Override
+                public void execute(Realm realm){
+                    Number maxPlaceId = realm.where(FootmarkDataTable.class).max("PlaceId");
+                    int nextPlaceId = 0;
+                    if(maxPlaceId != null) nextPlaceId = maxPlaceId.intValue() + 1;                //PlaceIdを連番で管理
+                    Number maxPostNum = realm.where(FootmarkDataTable.class).max("PostNum");
+                    long nextPostNum = 0;
+                    if(maxPostNum != null) nextPostNum = maxPostNum.longValue() + 1;
+                    //realm.beginTransaction();
+                    FootmarkDataTable footmarkDataTable = realm.createObject(FootmarkDataTable.class, new Long(nextPostNum));
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setPlaceId(nextPlaceId);
+                    footmarkDataTable.setPlaceName(mAddPlaceName.getText().toString());
+                    footmarkDataTable.setAccountName("デモユーザーさん");
+                    footmarkDataTable.setAccountImage(byteDemoUser);
+                    footmarkDataTable.setReviewBody(mAddReview.getText().toString());
+                    footmarkDataTable.setReviewDate(date2);
+                    //footmarkDataTable.setPlaceDate(date);
+                    footmarkDataTable.setPlaceImage(bytes);
+                    footmarkDataTable.setLatitude(latitude);
+                    footmarkDataTable.setLongitude(longitude);
 
-        //位置情報やってます
-        if(mGoogleApiClient == null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
+                    //realm.commitTransaction();
+                }
+            });
 
+            //位置情報やってます
+            if(mGoogleApiClient == null) {
+                mGoogleApiClient = new GoogleApiClient.Builder(this)
+                        .addConnectionCallbacks(this)
+                        .addOnConnectionFailedListener(this)
+                        .addApi(LocationServices.API)
+                        .build();
+
+            }
+            if(mGoogleApiClient != null) {
+                mGoogleApiClient.connect();
+            }
+            //ここにRealmにデータ追加する文を書く
+            Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
+
+            startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
+            finish();
         }
-        if(mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-        //ここにRealmにデータ追加する文を書く
-        Toast.makeText(this, "投稿しました!", Toast.LENGTH_SHORT).show();
 
-        startActivity(new Intent(InputSpotActivity.this, MapsActivity.class));
-        finish();
     }
 
     @Override

@@ -165,19 +165,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
             Date date = new Date();
             final String mDate = sdf.format(date);
-            Resources r1 = getResources();                                               //デモ用の画像を設定
-            Bitmap bmp1 = BitmapFactory.decodeResource(r1, R.drawable.demo1);
-            final byte[] bytes1 = MyUtils.getByteFromImage(bmp1);
-            Resources r2 = getResources();
-            Bitmap bmp2 = BitmapFactory.decodeResource(r2, R.drawable.demo2);
-            final byte[] bytes2 = MyUtils.getByteFromImage(bmp2);
+            Resources a_r1 = getResources();                                               //デモ用の画像を設定
+            Bitmap a_bmp1 = BitmapFactory.decodeResource(a_r1, R.drawable.demo1);
+            final byte[] a_bytes1 = MyUtils.getByteFromImage(a_bmp1);
+            Resources a_r2 = getResources();
+            Bitmap a_bmp2 = BitmapFactory.decodeResource(a_r2, R.drawable.demo2);
+            final byte[] a_bytes2 = MyUtils.getByteFromImage(a_bmp2);
+            /*
+            Resources a_r3 = getResources();
+            Bitmap a_bmp3 = BitmapFactory.decodeResource(a_r3, R.drawable.demo3);
+            final byte[] a_bytes3 = MyUtils.getByteFromImage(a_bmp3);
+            */
 
-            Resources r3 = getResources();                                               //デモ用のユーザ情報を設定
-            Bitmap bmp3 = BitmapFactory.decodeResource(r3, R.drawable.man);
-            final byte[] bytes3 = MyUtils.getByteFromImage(bmp3);
-            Resources r4 = getResources();
-            Bitmap bmp4 = BitmapFactory.decodeResource(r4, R.drawable.washokuman);
-            final byte[] bytes4 = MyUtils.getByteFromImage(bmp4);
+            Resources p_r1 = getResources();                                               //デモ用のユーザ情報を設定
+            Bitmap p_bmp1 = BitmapFactory.decodeResource(p_r1, R.drawable.man);
+            final byte[] p_bytes1 = MyUtils.getByteFromImage(p_bmp1);
+            Resources p_r2 = getResources();
+            Bitmap p_bmp2 = BitmapFactory.decodeResource(p_r2, R.drawable.washokuman);
+            final byte[] p_bytes2 = MyUtils.getByteFromImage(p_bmp2);
 
             mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
@@ -187,11 +192,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setTitle("山口大学工学部です");
                     footmarkDataTable.setReviewBody("山口大学工学部です");
                     footmarkDataTable.setAccountName("スクラムダイキ");
-                    footmarkDataTable.setAccountImage(bytes3);
+                    footmarkDataTable.setAccountImage(a_bytes1);
                     footmarkDataTable.setAccountId(0);
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
-                    footmarkDataTable.setPlaceImage(bytes1);
+                    footmarkDataTable.setPlaceImage(p_bytes1);
                     footmarkDataTable.setPlaceId(0);
                     footmarkDataTable.setPlaceNum(0);
                     footmarkDataTable.setLatitude("33.9567058");
@@ -202,15 +207,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setTitle("フジグラン宇部です");
                     footmarkDataTable.setReviewBody("フジグラン宇部です");
                     footmarkDataTable.setAccountName("マスターワカモト");
-                    footmarkDataTable.setAccountImage(bytes4);
+                    footmarkDataTable.setAccountImage(a_bytes2);
                     footmarkDataTable.setAccountId(1);
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
-                    footmarkDataTable.setPlaceImage(bytes2);
+                    footmarkDataTable.setPlaceImage(p_bytes2);
                     footmarkDataTable.setPlaceId(1);
                     footmarkDataTable.setPlaceNum(0);
                     footmarkDataTable.setLatitude("33.9304745");
                     footmarkDataTable.setLongitude("131.2556893");
+
+                    /*
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 2);
+                    footmarkDataTable.setPlaceName("常盤公園");
+                    footmarkDataTable.setTitle("常盤公園です");
+                    footmarkDataTable.setReviewBody("常盤公園です");
+                    footmarkDataTable.setAccountName("リーダーミヤケ");
+                    footmarkDataTable.setAccountImage(a_bytes3);
+                    footmarkDataTable.setAccountId(2);
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(p_bytes3);
+                    footmarkDataTable.setPlaceId(1);
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setLatitude("33.9304745");
+                    footmarkDataTable.setLongitude("131.2556893");
+                    */
                 }
             });
         }
