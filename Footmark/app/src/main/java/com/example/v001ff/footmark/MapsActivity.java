@@ -171,11 +171,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Resources p_r2 = getResources();
             Bitmap p_bmp2 = BitmapFactory.decodeResource(p_r2, R.drawable.demo2);
             final byte[] p_bytes2 = MyUtils.getByteFromImage(p_bmp2);
-            /*
-            Resources a_r3 = getResources();
-            Bitmap a_bmp3 = BitmapFactory.decodeResource(a_r3, R.drawable.demo3);
-            final byte[] a_bytes3 = MyUtils.getByteFromImage(a_bmp3);
-            */
+            Resources p_r3 = getResources();
+            Bitmap p_bmp3 = BitmapFactory.decodeResource(p_r3, R.drawable.demo3);
+            final byte[] p_bytes3 = MyUtils.getByteFromImage(p_bmp3);
+            Resources p_r4 = getResources();
+            Bitmap p_bmp4 = BitmapFactory.decodeResource(p_r4, R.drawable.demo4);
+            final byte[] p_bytes4 = MyUtils.getByteFromImage(p_bmp4);
+            Resources p_r5 = getResources();
+            Bitmap p_bmp5 = BitmapFactory.decodeResource(p_r5, R.drawable.demo5);
+            final byte[] p_bytes5 = MyUtils.getByteFromImage(p_bmp5);
+            Resources p_r6 = getResources();
+            Bitmap p_bmp6 = BitmapFactory.decodeResource(p_r6, R.drawable.demo6);
+            final byte[] p_bytes6 = MyUtils.getByteFromImage(p_bmp6);
+            Resources p_r7 = getResources();
+            Bitmap p_bmp7 = BitmapFactory.decodeResource(p_r7, R.drawable.demo7);
+            final byte[] p_bytes7 = MyUtils.getByteFromImage(p_bmp7);
+            Resources p_r8 = getResources();
+            Bitmap p_bmp8 = BitmapFactory.decodeResource(p_r8, R.drawable.demo8);
+            final byte[] p_bytes8 = MyUtils.getByteFromImage(p_bmp8);
+
 
             Resources a_r1 = getResources();                                               //デモ用のユーザ情報を設定
             Bitmap a_bmp1 = BitmapFactory.decodeResource(a_r1, R.drawable.man);
@@ -183,6 +197,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Resources a_r2 = getResources();
             Bitmap a_bmp2 = BitmapFactory.decodeResource(a_r2, R.drawable.washokuman);
             final byte[] a_bytes2 = MyUtils.getByteFromImage(a_bmp2);
+            Resources a_r3 = getResources();
+            Bitmap a_bmp3 = BitmapFactory.decodeResource(a_r3, R.drawable.sozaicmanjp);
+            final byte[] a_bytes3 = MyUtils.getByteFromImage(a_bmp3);
+            Resources a_r4 = getResources();
+            Bitmap a_bmp4 = BitmapFactory.decodeResource(a_r4, R.drawable.doctor);
+            final byte[] a_bytes4 = MyUtils.getByteFromImage(a_bmp4);
+            Resources a_r5 = getResources();
+            Bitmap a_bmp5 = BitmapFactory.decodeResource(a_r5, R.drawable.syatyo);
+            final byte[] a_bytes5 = MyUtils.getByteFromImage(a_bmp5);
 
             mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
@@ -217,7 +240,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     footmarkDataTable.setLatitude("33.9304745");
                     footmarkDataTable.setLongitude("131.2556893");
 
-                    /*
                     footmarkDataTable = realm.createObject(FootmarkDataTable.class, 2);
                     footmarkDataTable.setPlaceName("常盤公園");
                     footmarkDataTable.setTitle("常盤公園です");
@@ -228,11 +250,86 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     //footmarkDataTable.setPlaceDate(mDate);
                     footmarkDataTable.setReviewDate(mDate);
                     footmarkDataTable.setPlaceImage(p_bytes3);
-                    footmarkDataTable.setPlaceId(1);
+                    footmarkDataTable.setPlaceId(2);
                     footmarkDataTable.setPlaceNum(0);
-                    footmarkDataTable.setLatitude("33.9304745");
-                    footmarkDataTable.setLongitude("131.2556893");
-                    */
+                    footmarkDataTable.setLatitude("33.9457114");
+                    footmarkDataTable.setLongitude("131.2830209");
+
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 3);
+                    footmarkDataTable.setPlaceName("海岸");
+                    footmarkDataTable.setTitle("海岸です");
+                    footmarkDataTable.setReviewBody("海岸です");
+                    footmarkDataTable.setAccountName("フジモト");
+                    footmarkDataTable.setAccountImage(a_bytes4);
+                    footmarkDataTable.setAccountId(3);
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(p_bytes4);
+                    footmarkDataTable.setPlaceId(3);
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setLatitude("33.9273581");
+                    footmarkDataTable.setLongitude("131.2777983");
+
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 4);
+                    footmarkDataTable.setPlaceName("宇部興産前");
+                    footmarkDataTable.setTitle("宇部興産前です");
+                    footmarkDataTable.setReviewBody("宇部興産前です");
+                    footmarkDataTable.setAccountName("アカギ");
+                    footmarkDataTable.setAccountImage(a_bytes5);
+                    footmarkDataTable.setAccountId(4);
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(p_bytes5);
+                    footmarkDataTable.setPlaceId(4);
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setLatitude("33.9545363");
+                    footmarkDataTable.setLongitude("131.2116691");
+
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 5);
+                    footmarkDataTable.setPlaceName("おいしいお好み焼き店");
+                    footmarkDataTable.setTitle("おいしいお好み焼き店です");
+                    footmarkDataTable.setReviewBody("おいしいお好み焼き店です");
+                    footmarkDataTable.setAccountName("マスターワカモト");
+                    footmarkDataTable.setAccountImage(a_bytes2);
+                    footmarkDataTable.setAccountId(5);
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(p_bytes6);
+                    footmarkDataTable.setPlaceId(5);
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setLatitude("33.9571085");
+                    footmarkDataTable.setLongitude("131.2764968");
+
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 6);
+                    footmarkDataTable.setPlaceName("大草原");
+                    footmarkDataTable.setTitle("大草原です");
+                    footmarkDataTable.setReviewBody("大草原です");
+                    footmarkDataTable.setAccountName("アカギ");
+                    footmarkDataTable.setAccountImage(a_bytes5);
+                    footmarkDataTable.setAccountId(6);
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(p_bytes7);
+                    footmarkDataTable.setPlaceId(6);
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setLatitude("33.9685942");
+                    footmarkDataTable.setLongitude("131.2825089");
+
+                    footmarkDataTable = realm.createObject(FootmarkDataTable.class, 7);
+                    footmarkDataTable.setPlaceName("片倉温泉");
+                    footmarkDataTable.setTitle("片倉温泉です");
+                    footmarkDataTable.setReviewBody("片倉温泉です");
+                    footmarkDataTable.setAccountName("リーダーミヤケ");
+                    footmarkDataTable.setAccountImage(a_bytes3);
+                    footmarkDataTable.setAccountId(7);
+                    //footmarkDataTable.setPlaceDate(mDate);
+                    footmarkDataTable.setReviewDate(mDate);
+                    footmarkDataTable.setPlaceImage(p_bytes8);
+                    footmarkDataTable.setPlaceId(7);
+                    footmarkDataTable.setPlaceNum(0);
+                    footmarkDataTable.setLatitude("33.9729733");
+                    footmarkDataTable.setLongitude("131.2990880");
+
                 }
             });
         }
