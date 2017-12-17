@@ -2,11 +2,13 @@ package com.example.v001ff.footmark;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
@@ -18,7 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,6 +40,8 @@ public class AddSpotActivity extends AppCompatActivity {
     String latitude;
     String longitudeRef;                                         //画像から取得する経度
     String longitude;
+    Uri mSaveUri;                                       //画像を保存するために使用するUri.Uriは住所みたいなもの.URLの親戚
+    String filename;                                    //画像のファイル名をここに保存する.
     Bitmap capturedImage;
     //private long AccountID                                        アカウント機能実装後に、投稿したユーザのIDもデータベースに保存する
 
@@ -77,7 +81,14 @@ public class AddSpotActivity extends AppCompatActivity {
                     // パーミッションが必要な処理。以下でカメラ起動。
                     Intent intent = new Intent();
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                    startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);
+                    filename = System.currentTimeMillis() + ".jpg";             //画像ファイルの名前を決める
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, filename);
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    mSaveUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//
+
+                    startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラで撮影終わった後,onActivityResultを実行
 
                 }
             }
@@ -87,11 +98,17 @@ public class AddSpotActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         if(REQUEST_CAPTURE_IMAGE == requestCode && resultCode == Activity.RESULT_OK){
+            try {
+                capturedImage = MediaStore.Images.Media.getBitmap(getContentResolver(),mSaveUri);        //capturedImageにFileInputStreamで中継してきた画像ファイルを格納
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("はいったあああああああああああああああああああああああああ!!!!!!!!!!!!!!!!");
+            }
             //capturedImage = (Bitmap) data.getExtras().get("data");
             //((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
-            capturedImage = (Bitmap) data.getExtras().get("data");
-            ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
-            capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
+            //capturedImage = (Bitmap) data.getExtras().get("data");
+            //ByteArrayOutputStream byteArrayStream = new ByteArrayOutputStream();
+            //capturedImage.compress(Bitmap.CompressFormat.PNG,100,byteArrayStream);
             ((ImageView) findViewById(R.id.spot_photo)).setImageBitmap(capturedImage);
         }
     }

@@ -86,14 +86,14 @@ public class InputSpotActivity extends AppCompatActivity implements GoogleApiCli
                     // パーミッションが必要な処理。以下でカメラ起動。
                     Intent intent = new Intent();
                     intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                    filename = System.currentTimeMillis() + ".jpg";
+                    filename = System.currentTimeMillis() + ".jpg";                     //画像ファイルの名前を決める
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.Images.Media.TITLE, filename);
                     values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
                     mSaveUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
                     intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える//                    intent.putExtra(MediaStore.EXTRA_OUTPUT, mSaveUri);         //mSaveUriにカメラで撮った画像を格納する.これで画質向上狙える
 
-                    startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラ起動.
+                    startActivityForResult(intent, REQUEST_CAPTURE_IMAGE);      //カメラで撮影終わった後,onActivityResultを実行
 
                 }
             }
