@@ -81,17 +81,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } catch (InterruptedException e) {
         }
         setTheme(R.style.AppTheme);//splash表示する
-        setContentView(R.layout.activity_maps);
 
-        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);        //位置情報を利用するための準備
-        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);              //GPSを用いて位置情報を利用できるか確認するのに使う
+        manager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        LocationProvider provider = manager.getProvider(manager.GPS_PROVIDER);
 
         //対応検討中(も)
         //InputSpotFragment fragment = new InputSpotFragment();
         //getFragmentManager().beginTransaction().add
         //        (android.R.id.content, fragment, "InputSpotFragment").commit();
 
-        setContentView(R.layout.activity_maps);                     //パーミッション全部許可してないと最初に設定画面に飛ばされる
+        setContentView(R.layout.activity_maps);
         if (Build.VERSION.SDK_INT >= 23)
             checkPermission();
         else
@@ -104,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause(){
         if(manager!=null){
-            manager.removeUpdates(this);                //位置情報の取得処理を終了する
+            manager.removeUpdates(this);
         }
         super.onPause();
     }
@@ -166,24 +165,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");              //デモ用の日付をここで設定してます.
             Date date = new Date();
             final String mDate = sdf.format(date);
-            Resources a_r1 = getResources();                                               //デモ用の画像を設定
-            Bitmap a_bmp1 = BitmapFactory.decodeResource(a_r1, R.drawable.demo1);
-            final byte[] a_bytes1 = MyUtils.getByteFromImage(a_bmp1);
-            Resources a_r2 = getResources();
-            Bitmap a_bmp2 = BitmapFactory.decodeResource(a_r2, R.drawable.demo2);
-            final byte[] a_bytes2 = MyUtils.getByteFromImage(a_bmp2);
+            Resources p_r1 = getResources();                                               //デモ用の画像を設定
+            Bitmap p_bmp1 = BitmapFactory.decodeResource(p_r1, R.drawable.demo1);
+            final byte[] p_bytes1 = MyUtils.getByteFromImage(p_bmp1);
+            Resources p_r2 = getResources();
+            Bitmap p_bmp2 = BitmapFactory.decodeResource(p_r2, R.drawable.demo2);
+            final byte[] p_bytes2 = MyUtils.getByteFromImage(p_bmp2);
             /*
             Resources a_r3 = getResources();
             Bitmap a_bmp3 = BitmapFactory.decodeResource(a_r3, R.drawable.demo3);
             final byte[] a_bytes3 = MyUtils.getByteFromImage(a_bmp3);
             */
 
-            Resources p_r1 = getResources();                                               //デモ用のユーザ情報を設定
-            Bitmap p_bmp1 = BitmapFactory.decodeResource(p_r1, R.drawable.man);
-            final byte[] p_bytes1 = MyUtils.getByteFromImage(p_bmp1);
-            Resources p_r2 = getResources();
-            Bitmap p_bmp2 = BitmapFactory.decodeResource(p_r2, R.drawable.washokuman);
-            final byte[] p_bytes2 = MyUtils.getByteFromImage(p_bmp2);
+            Resources a_r1 = getResources();                                               //デモ用のユーザ情報を設定
+            Bitmap a_bmp1 = BitmapFactory.decodeResource(a_r1, R.drawable.man);
+            final byte[] a_bytes1 = MyUtils.getByteFromImage(a_bmp1);
+            Resources a_r2 = getResources();
+            Bitmap a_bmp2 = BitmapFactory.decodeResource(a_r2, R.drawable.washokuman);
+            final byte[] a_bytes2 = MyUtils.getByteFromImage(a_bmp2);
 
             mRealm.executeTransaction(new Realm.Transaction() {                      //デモ用のデータをここでデータベースに格納しています.
                 @Override
